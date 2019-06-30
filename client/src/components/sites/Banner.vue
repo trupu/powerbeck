@@ -1,6 +1,6 @@
 <template lang='pug'>
     div.container
-        nav.nav-menu
+        nav.nav-menu(ref='menuScroller')
             div.nav-menu_logo
                 a.nav-menu_logo(href='/')
                     img(src='../../assets/logo.png')
@@ -45,7 +45,8 @@
                     | OFERTA
                 button.button-medium-reverse
                     | LOGOWANIE
-            i(class='fas fa-chevron-down')
+            a(href='#coaches')
+                i(class='fas fa-chevron-down')
                 
 </template>
 <script>
@@ -56,6 +57,9 @@ export default {
     methods: {
         showMenu(){
             const menu = this.$refs.myMenu;
+
+            this.$refs.menuScroller.classList.add('menu-active');
+
             const on = 'menu-animation-on';
             const off = 'menu-animation-off';
 
@@ -81,6 +85,8 @@ export default {
             const on = 'menu-animation-on';
             const off = 'menu-animation-off';
 
+            this.$refs.menuScroller.classList.remove('menu-active');
+
             const li = document.querySelectorAll('.menu-list li');
 
             li.forEach((el,index) => {
@@ -91,8 +97,38 @@ export default {
 
             menu.classList.remove(on);
             menu.classList.add(off);
+        },
+        scrollMenu(){
+            const menu = this.$refs.menuScroller;
+            if(window.scrollY != 0){
+                    menu.style.backgroundColor = 'rgba(0,0,0,.7)';
+
+                }else{
+                    menu.style.backgroundColor = '';
+                }
+            if(this.$refs.menuScroller.classList.contains('menu-active')){
+                
+            }else{
+                menu.style.transform = 'translateY(0)';
+
+                if(window.scrollY != 0){
+                    menu.style.backgroundColor = 'rgba(0,0,0,.7)';
+
+                    setTimeout(() => {
+                        menu.style.transform = 'translateY(-45px)';
+                    }, 5000);
+                }else{
+                    menu.style.backgroundColor = '';
+                }
+            }
         }
-    }
+    },
+    created () {
+        window.addEventListener('scroll', this.scrollMenu);
+    },
+    destroyed () {
+        window.removeEventListener('scroll', this.scrollMenu);
+    },
 }
 </script>
 <style lang='scss' scoped>
@@ -101,10 +137,10 @@ export default {
 
     @keyframes menu-anim{
         from{
-            transform: translateY(0);
+            top: -500px;
         }
         to{
-            transform: translateY(500px);
+            top: 0;
         }
     }
 
@@ -159,6 +195,8 @@ export default {
         text-transform: uppercase;
 
         padding: 0 5px;
+
+        transition: background .3s ease-in-out, transform .3s ease-in-out;
 
         .nav-menu_logo{
             display: flex;
@@ -425,6 +463,10 @@ export default {
                         li{
                             font-size: 20px;
                             text-shadow: 2px 2px 8px #000;
+
+                            &:hover{
+                                background: none;
+                            }
                         }
                     }
                 }
