@@ -45,7 +45,7 @@
                     | OFERTA
                 button.button-medium-reverse
                     | LOGOWANIE
-                i(class='fas fa-chevron-down')
+            i(class='fas fa-chevron-down')
                 
 </template>
 <script>
@@ -336,8 +336,8 @@ export default {
             button:first-child{
                 margin: 30px 0 20px 0;
             }
-
-            i{
+        }
+        i{
                 font-size: 2.5em;
                 color: #fff;
                 
@@ -377,7 +377,6 @@ export default {
                     transform: translateY(-15px);
                 }
             }
-        }
     }
 
     @media (max-width:768px){
@@ -392,6 +391,79 @@ export default {
 
         .menu-animation-off{
             animation: menu-anim-off .7s forwards;
+        }
+    }
+
+    @media (min-width: 768px){
+        .nav-menu{
+            .nav-menu_menu{
+                display: none;
+            }
+
+            .nav-menu_links__exit{
+                display: none;
+            }
+
+            .nav-menu_links{
+                top: 0;
+                background: none;
+
+                ul{
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    position: fixed;
+
+                    top: 0;
+                    right: 10%;
+                    width: 60%;
+                    height: 50px;
+
+                    a{
+
+                        li{
+                            font-size: 20px;
+                            text-shadow: 2px 2px 8px #000;
+                        }
+                    }
+                }
+            }
+        }
+
+        .banner-main{
+            .banner-main_wrapper{
+                .banner-main_title{
+                    font-size: 5em;
+                }
+                .banner-main_subtitle{
+                    font-size: 3em;
+                }
+            }
+            .banner-main_buttons{
+                display: flex;
+                flex-flow: row;
+                align-items: center;
+                justify-content: space-between;
+
+                button:first-child{
+                    margin: 0;
+                }
+
+                button{
+                    margin: 30px 20px;
+                }
+            }
+            i{
+                width: 150px;
+                &::after{
+                    font-size: 20px;
+                }
+
+                &:hover::after{
+                    transform: translateY(-20px);
+                }
+            }
         }
     }
 
