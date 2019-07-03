@@ -1,6 +1,8 @@
 <template lang='pug'>
     div.container
-        nav.nav-menu(ref='menuScroller')
+        div.nav-menu_show(@mouseover='mouseOverMenu()' @click='mouseOverMenu()' ref='menuShow')
+                | Rozwiń
+        nav.nav-menu(@mouseover='mouseOverMenu()' ref='menuScroller')
             div.nav-menu_logo
                 a.nav-menu_logo(href='/')
                     img(src='../../assets/logo.png')
@@ -98,29 +100,37 @@ export default {
             menu.classList.remove(on);
             menu.classList.add(off);
         },
+        mouseOverMenu(){
+            const menu = this.$refs.menuScroller;
+            const menuShow = this.$refs.menuShow;
+
+            menu.style.transform = 'translateY(0px)';
+            menuShow.style.opacity = '0';
+            menuShow.style.transform = 'translateY(-35px)';
+        },
+        mouseLeaveMenu(){
+            const menu = this.$refs.menuScroller;
+            const menuShow = this.$refs.menuShow;
+
+            menu.style.transform = 'translateY(-50px)';
+            menuShow.style.opacity = '1';
+            menuShow.style.transform = 'translateY(0px)';
+        },
         scrollMenu(){
             const menu = this.$refs.menuScroller;
             if(window.scrollY != 0){
                     menu.style.backgroundColor = 'rgba(0,0,0,.7)';
 
+                    const x = this.mouseOverMenu;
+                    const y = this.mouseLeaveMenu;
+
+                    x();
+                    setTimeout( y, 1000);
+                    
+
                 }else{
                     menu.style.backgroundColor = '';
                 }
-            if(this.$refs.menuScroller.classList.contains('menu-active')){
-                
-            }else{
-                menu.style.transform = 'translateY(0)';
-
-                if(window.scrollY != 0){
-                    menu.style.backgroundColor = 'rgba(0,0,0,.7)';
-
-                    setTimeout(() => {
-                        menu.style.transform = 'translateY(-45px)';
-                    }, 5000);
-                }else{
-                    menu.style.backgroundColor = '';
-                }
-            }
         }
     },
     created () {
@@ -174,6 +184,44 @@ export default {
         background-position: 60% 50%;
 
     }
+
+    .nav-menu_show{
+            display: flex;
+
+            position: fixed;
+            left: 37%;
+            top: -3px;
+
+            z-index: 100;
+
+            opacity: 0;
+            transform: translateY(-35px);
+
+            align-items: center;
+            justify-content: center;
+            flex-flow: row;
+
+            font-size: 14px;
+            line-height: .5;
+
+            color: white;
+            background-color: rgba(0,0,0,.7);
+
+            border-radius: 5px;
+
+            width: 100px;
+            height: 30px;
+
+            transition: all .3s ease-in-out;
+
+            &::after{
+                content: '\00bb';
+                transform: rotate(90deg);
+
+                margin: 5px;
+                font-size: 2em;
+            }
+        }
 
     .nav-menu{
         display: flex;
@@ -433,6 +481,9 @@ export default {
     }
 
     @media (min-width: 768px){
+        .nav-menu_show{
+            left: 45%;
+        }
         .nav-menu{
             .nav-menu_menu{
                 display: none;
@@ -506,6 +557,12 @@ export default {
                     transform: translateY(-20px);
                 }
             }
+        }
+    }
+
+    @media (min-width: 1024px){
+        .nav-menu_show{
+            left: 47%;
         }
     }
 
