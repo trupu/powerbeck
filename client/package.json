@@ -33,7 +33,10 @@
       "plugin:vue/essential",
       "@vue/airbnb"
     ],
-    "rules": {},
+    "rules": {
+      "indent": "off",
+      "camelcase": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

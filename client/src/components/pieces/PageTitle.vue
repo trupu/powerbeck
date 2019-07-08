@@ -1,14 +1,15 @@
 <template>
-    
+    <div>
+    </div>
 </template>
 <script>
 export default {
-    name: 'PageTitle',
-}
+  name: 'PageTitle',
+};
 </script>
 <style lang='scss'>
 
-    $default_site_color: #9E0012; 
+    $default_site_color: #9E0012;
 
     .page-title{
         width: 100%;
@@ -43,4 +44,16 @@ export default {
             }
         }
     }
+
+    @media (max-width: 768px){
+            .page-title{
+                p{
+                    margin-top: -5px;
+
+                    &::after{
+                        bottom: -5px;
+                    }
+                }
+            }
+        }
 </style>

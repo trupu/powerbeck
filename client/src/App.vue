@@ -7,7 +7,7 @@
 
 <script>
 import Banner from './components/sites/Banner.vue';
-import Coaches from './components/sites/Coaches.vue'
+import Coaches from './components/sites/Coaches.vue';
 
 export default {
   name: 'app',

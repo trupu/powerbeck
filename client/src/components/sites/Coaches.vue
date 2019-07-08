@@ -1,41 +1,153 @@
-<template lang='pug'>
+<template lang='pug' v-if="CoachesArray">
     div#coaches
         div.page-title
             i(class='fas fa-users')
             p
                 | Trenerzy
-        div.content(ref='coachContent')
-            div.coach-image(ref='coachImage')
-                img(src='../../assets/trener1.jpg')
-            div.coach-header
-                div.coach-header_name(ref='coachName')
-                    h3
-                        | Jennifer Lawrence
-                    h4
-                        | Trener Personalny
-                p.coach-header_quotation(ref='coachQuotation')
-                    | "Tu znajduje się jakiś cytat"
-            div.coach-about(ref='coachAbout')
-                p
-                    | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer eget turpis massa. Cras vitae leo sodales, malesuada leo in, ultrices sapien. Morbi semper nibh tortor, a gravida nulla porttitor at. Curabitur tortor libero, rutrum sed elit vel, iaculis sagittis lectus. Maecenas ornare a velit quis tempus. 
-            div.coach-slider(ref='coachSlider')
+        div.coaches-content(ref='coachesContent')
+        div.coaches-slider
+            div.coaches-slider_circle(ref='sliderCircle' v-for='n in this.array.CoachesArray.length' @click='slider(0, 5000)')
+
+
 </template>
 <script>
 import PageTitle from '../pieces/PageTitle.vue';
+import CoachesArray from '../../coaches.js';
 
 export default {
-    name: 'Coaches',
-}
-</script>
-<style lang='scss' scoped>
+  name: 'Coaches',
+  data() {
+      return {
+          array: CoachesArray,
+          interval: '',
+      };
+  },
+  methods: {
+        // DYNAMICALLY CREATING CONTENT - SLIDER
+    createCoachBox(array, index) {
+            const main = this.$refs.coachesContent;
+            const circle = this.$refs.sliderCircle;
 
-.content{
+            main.innerHTML = '';
+
+            const ci = document.createElement('div');
+            ci.classList.add('coach-image');
+            main.appendChild(ci);
+
+            const img = document.createElement('img');
+            img.src = array[index].url; // img
+            ci.appendChild(img);
+
+            const ch = document.createElement('div');
+            ch.classList.add('coach-header');
+            main.appendChild(ch);
+
+            const ch_n = document.createElement('div');
+            ch_n.classList.add('coach-header_name');
+            ch.appendChild(ch_n);
+
+            const ch_3 = document.createElement('h3');
+            ch_3.innerHTML = array[index].name; // name
+            ch_n.appendChild(ch_3);
+
+            const ch_4 = document.createElement('h4');
+            ch_4.innerHTML = array[index].description; // description
+            ch_n.appendChild(ch_4);
+
+            const ch_p = document.createElement('p');
+            ch_p.classList.add('coach-header_quotation');
+            ch_p.innerHTML = array[index].quotation; // quotation
+            ch.appendChild(ch_p);
+
+            const ca = document.createElement('div');
+            ca.classList.add('coach-about');
+            main.appendChild(ca);
+
+            const ca_p = document.createElement('p');
+            ca_p.innerHTML = array[index].about; // about
+            ca.appendChild(ca_p);
+
+            const d = circle.find(el => el.classList.contains('circle-active'));
+
+            if (d) {
+                d.classList.remove('circle-active');
+                d.style.background = 'none';
+            }
+            circle[index].style.backgroundColor = '#000';
+            circle[index].classList.add('circle-active');
+            index === circle.length ? index = 0 : index++;
+    },
+        // SLIDE ANIMATION
+    slideEffect(array, index) {
+        const main = this.$refs.coachesContent;
+
+        main.style.opacity = 0;
+        main.style.transform = 'translateX(-300px)';
+
+        setTimeout(() => {
+            this.createCoachBox(array, index);
+        }, 500);
+
+        setTimeout(() => {
+            main.style = '';
+        }, (500));
+    },
+        // EVENT WRAPPER
+    slider(index, time, i = 0) {
+        if (event) {
+            const ev = event.target;
+
+            let id = this.$refs.sliderCircle.indexOf(ev);
+
+            clearInterval(this.interval);
+
+            const main = this.$refs.coachesContent;
+            main.style = '';
+
+            this.slideEffect(this.array.CoachesArray, id);
+            id === (this.array.CoachesArray.length - 1) ? id = 0 : id++;
+
+            this.interval = setInterval(() => {
+                this.slideEffect(this.array.CoachesArray, id);
+                id === (this.array.CoachesArray.length - 1) ? id = 0 : id++;
+            }, time);
+
+            return;
+        }
+        this.slideEffect(this.array.CoachesArray, i);
+        i === (this.array.CoachesArray.length - 1) ? i = 0 : i++;
+
+        this.interval = setInterval(() => {
+            this.slideEffect(this.array.CoachesArray, i);
+            i === (this.array.CoachesArray.length - 1) ? i = 0 : i++;
+        }, time);
+    },
+  },
+  mounted() {
+      this.slider(0, 5000);
+  },
+  created() {
+  },
+  destroyed() {
+
+  },
+};
+</script>
+<style lang='scss'>
+
+.coaches-content{
     display: grid;
-    
+
     grid-template-columns: 1fr 2fr;
 
     margin: 5px;
 
+    transform: translateX(0px);
+    opacity: 1;
+
+    transition: all .5s ease-in-out;
+
+    min-height: 300px;
     width: 100%;
 
     .coach-image{
@@ -85,7 +197,7 @@ export default {
 
                 background-color: #000;
             }
-        }    
+        }
          .coach-header_quotation{
             font-size: .8em;
             font-weight: 300;
@@ -107,6 +219,46 @@ export default {
         }
 }
 
+.coaches-slider{
+
+        width: 100%;
+        height: auto;
+
+        display: flex;
+        flex-flow: row;
+
+        align-items: center;
+        justify-content: center;
+
+        margin: 10px 0;
+
+        .coaches-slider_circle{
+            width: 15px;
+            height: 15px;
+
+            border-radius: 50%;
+            margin-left: 10px;
+
+            background: none;
+            border: 2px solid #000;
+
+            transition: all .15s ease-in-out;
+            &:hover{
+                background-color: #000;
+                cursor: pointer;
+            }
+        }
+    }
+
+.slider-before{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    margin: 5px;
+    width: 100%;
+
+    transition: all .5s ease-in-out;
+}
+
 @media (max-width: 768px){
     .coach-image{
         display: flex;
@@ -123,7 +275,7 @@ export default {
         background-repeat: no-repeat;
         background-position: 5% 10%;
     }
-    .content{
+    .coaches-content{
         margin: 20px 0;
 
         position: relative;
@@ -131,7 +283,6 @@ export default {
         width: 60%;
 
         grid-template-columns: 1fr 2fr;
-        grid-template-rows: repeat(3, 1fr);
         .coach-image{
             grid-area: 1 / 1 / 1 / span 2;
             img{
@@ -157,4 +308,3 @@ export default {
 }
 
 </style>
-

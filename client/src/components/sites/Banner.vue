@@ -49,100 +49,98 @@
                     | LOGOWANIE
             a(href='#coaches')
                 i(class='fas fa-chevron-down')
-                
+
 </template>
 <script>
-import Buttons from "../pieces/Buttons";
+import Buttons from '../pieces/Buttons';
 
 export default {
-    name:'Banner',
-    methods: {
-        showMenu(){
-            const menu = this.$refs.myMenu;
+  name: 'Banner',
+  methods: {
+    showMenu() {
+      const menu = this.$refs.myMenu;
 
-            this.$refs.menuScroller.classList.add('menu-active');
+      this.$refs.menuScroller.classList.add('menu-active');
 
-            const on = 'menu-animation-on';
-            const off = 'menu-animation-off';
+      const on = 'menu-animation-on';
+      const off = 'menu-animation-off';
 
-            const li = document.querySelectorAll('.menu-list li');
+      const li = document.querySelectorAll('.menu-list li');
 
-            let time = 0.5;
+      let time = 0.5;
 
-            li.forEach((el,index) => {
-                time+=0.2;
+      li.forEach((el, index) => {
+        time += 0.2;
 
-                el.classList.add('menu-li-anim');
-                el.style.animationDuration = `${time}s`;
-            });
+        el.classList.add('menu-li-anim');
+        el.style.animationDuration = `${time}s`;
+      });
 
-            if(menu.classList.contains(off)){
-                menu.classList.remove(off);
-            }
-            this.$refs.menuButton.style.opacity='0';
-            menu.classList.add(on);
-        },
-        hideMenu(){
-            const menu = this.$refs.myMenu;
-            const on = 'menu-animation-on';
-            const off = 'menu-animation-off';
-
-            this.$refs.menuScroller.classList.remove('menu-active');
-
-            const li = document.querySelectorAll('.menu-list li');
-
-            li.forEach((el,index) => {
-                el.classList.remove('menu-li-anim');
-            });
-
-            this.$refs.menuButton.style.opacity='1';
-
-            menu.classList.remove(on);
-            menu.classList.add(off);
-        },
-        mouseOverMenu(){
-            const menu = this.$refs.menuScroller;
-            const menuShow = this.$refs.menuShow;
-
-            menu.style.transform = 'translateY(0px)';
-            menuShow.style.opacity = '0';
-            menuShow.style.transform = 'translateY(-35px)';
-        },
-        mouseLeaveMenu(){
-            const menu = this.$refs.menuScroller;
-            const menuShow = this.$refs.menuShow;
-
-            menu.style.transform = 'translateY(-50px)';
-            menuShow.style.opacity = '1';
-            menuShow.style.transform = 'translateY(0px)';
-        },
-        scrollMenu(){
-            const menu = this.$refs.menuScroller;
-            if(window.scrollY != 0){
-                    menu.style.backgroundColor = 'rgba(0,0,0,.7)';
-
-                    const x = this.mouseOverMenu;
-                    const y = this.mouseLeaveMenu;
-
-                    x();
-                    setTimeout( y, 1000);
-                    
-
-                }else{
-                    menu.style.backgroundColor = '';
-                }
-        }
+      if (menu.classList.contains(off)) {
+        menu.classList.remove(off);
+      }
+      this.$refs.menuButton.style.opacity = '0';
+      menu.classList.add(on);
     },
-    created () {
-        window.addEventListener('scroll', this.scrollMenu);
+    hideMenu() {
+      const menu = this.$refs.myMenu;
+      const on = 'menu-animation-on';
+      const off = 'menu-animation-off';
+
+      this.$refs.menuScroller.classList.remove('menu-active');
+
+      const li = document.querySelectorAll('.menu-list li');
+
+      li.forEach((el, index) => {
+        el.classList.remove('menu-li-anim');
+      });
+
+      this.$refs.menuButton.style.opacity = '1';
+
+      menu.classList.remove(on);
+      menu.classList.add(off);
     },
-    destroyed () {
-        window.removeEventListener('scroll', this.scrollMenu);
+    mouseOverMenu() {
+      const menu = this.$refs.menuScroller;
+      const { menuShow } = this.$refs;
+
+      menu.style.transform = 'translateY(0px)';
+      menuShow.style.opacity = '0';
+      menuShow.style.transform = 'translateY(-35px)';
     },
-}
+    mouseLeaveMenu() {
+      const menu = this.$refs.menuScroller;
+      const { menuShow } = this.$refs;
+
+      menu.style.transform = 'translateY(-50px)';
+      menuShow.style.opacity = '1';
+      menuShow.style.transform = 'translateY(0px)';
+    },
+    scrollMenu() {
+      const menu = this.$refs.menuScroller;
+      if (window.scrollY != 0) {
+        menu.style.backgroundColor = 'rgba(0,0,0,.7)';
+
+        const x = this.mouseOverMenu;
+        const y = this.mouseLeaveMenu;
+
+        x();
+        setTimeout(y, 1000);
+      } else {
+        menu.style.backgroundColor = '';
+      }
+    },
+  },
+  created() {
+    window.addEventListener('scroll', this.scrollMenu);
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.scrollMenu);
+  },
+};
 </script>
 <style lang='scss' scoped>
-    
+
     $default_site_color: #9e0012;
 
     @keyframes menu-anim{
@@ -177,7 +175,7 @@ export default {
     .container{
         width:100vw;
         height: 100vh;
-        
+
         background-image: url('../../assets/banner_bg.jpg');
         background-size: 450%;
         background-repeat: no-repeat;
@@ -231,7 +229,7 @@ export default {
 
         top: 0;
         left: 0;
-        
+
         width: 100vw;
         height: 50px;
 
@@ -277,7 +275,7 @@ export default {
             display: flex;
             align-items: center;
             flex-flow: row;
-            
+
             user-select: none;
             transition: all .3s ease-in-out;
 
@@ -368,7 +366,7 @@ export default {
                             opacity: 0;
 
                             transition: margin .3s ease-in-out, opacity .3s ease-in-out;
-            
+
                         }
 
                         &:hover::after{
@@ -426,14 +424,14 @@ export default {
         i{
                 font-size: 2.5em;
                 color: #fff;
-                
+
                 width: 120px;
 
                 text-align: center;
 
                 position: relative;
                 top: 30px;
-                
+
                 transition: all .3s ease-in-out;
                 color: $default_site_color;
 
@@ -466,7 +464,7 @@ export default {
     }
 
     @media (max-width:768px){
-    
+
         .menu-li-anim{
             animation: menu-li both;
         }

@@ -1,11 +1,11 @@
 <template>
-    
+<div></div>
 </template>
 
 <script>
 export default {
-    name: 'Buttons',
-}
+  name: 'Buttons',
+};
 </script>
 <style lang='scss'>
 
@@ -16,6 +16,8 @@ export default {
         height: 50px;
         font-size: 1.3em;
         font-weight: 700;
+
+        text-shadow: 2px 2px 8px #000;
 
         transition: all .3s ease-in-out;
 
@@ -48,4 +50,3 @@ export default {
 
 
 </style>
-
