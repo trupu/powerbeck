@@ -2,18 +2,21 @@
   <div id="app">
     <Banner />
     <Coaches />
+    <Activities />
   </div>
 </template>
 
 <script>
 import Banner from './components/sites/Banner.vue';
 import Coaches from './components/sites/Coaches.vue';
+import Activities from './components/sites/Activities.vue';
 
 export default {
   name: 'app',
   components: {
     Banner,
     Coaches,
+    Activities,
   },
 };
 </script>

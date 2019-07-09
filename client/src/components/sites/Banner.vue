@@ -52,11 +52,15 @@
 
 </template>
 <script>
-import Buttons from '../pieces/Buttons';
+import Buttons from '../pieces/Buttons.vue';
 
 export default {
   name: 'Banner',
+  components: {
+      Buttons,
+  },
   methods: {
+    // mobiles: show hamburger-menu
     showMenu() {
       const menu = this.$refs.myMenu;
 
@@ -69,7 +73,7 @@ export default {
 
       let time = 0.5;
 
-      li.forEach((el, index) => {
+      li.forEach((el) => {
         time += 0.2;
 
         el.classList.add('menu-li-anim');
@@ -82,6 +86,7 @@ export default {
       this.$refs.menuButton.style.opacity = '0';
       menu.classList.add(on);
     },
+    // mobiles: hide hamburger-menu
     hideMenu() {
       const menu = this.$refs.myMenu;
       const on = 'menu-animation-on';
@@ -91,7 +96,7 @@ export default {
 
       const li = document.querySelectorAll('.menu-list li');
 
-      li.forEach((el, index) => {
+      li.forEach((el) => {
         el.classList.remove('menu-li-anim');
       });
 
@@ -100,35 +105,40 @@ export default {
       menu.classList.remove(on);
       menu.classList.add(off);
     },
+    // showing nav-menu
     mouseOverMenu() {
-      const menu = this.$refs.menuScroller;
-      const { menuShow } = this.$refs;
+        const menu = this.$refs.menuScroller;
+        const { menuShow } = this.$refs;
 
-      menu.style.transform = 'translateY(0px)';
-      menuShow.style.opacity = '0';
-      menuShow.style.transform = 'translateY(-35px)';
+        menu.style.transform = 'translateY(0px)';
+        menuShow.style.opacity = '0';
+        menuShow.style.transform = 'translateY(-35px)';
     },
+    // hiding nav-menu
     mouseLeaveMenu() {
-      const menu = this.$refs.menuScroller;
-      const { menuShow } = this.$refs;
+        const menu = this.$refs.menuScroller;
+        const { menuShow } = this.$refs;
 
-      menu.style.transform = 'translateY(-50px)';
-      menuShow.style.opacity = '1';
-      menuShow.style.transform = 'translateY(0px)';
+        if (!menu.classList.contains('menu-active')) {
+            menu.style.transform = 'translateY(-50px)';
+            menuShow.style.opacity = '1';
+            menuShow.style.transform = 'translateY(0px)';
+        }
     },
+    // nav-menu showing/hiding onScroll
     scrollMenu() {
-      const menu = this.$refs.menuScroller;
-      if (window.scrollY != 0) {
-        menu.style.backgroundColor = 'rgba(0,0,0,.7)';
+        const menu = this.$refs.menuScroller;
+        if (window.scrollY !== 0) {
+            menu.style.backgroundColor = 'rgba(0,0,0,.7)';
 
-        const x = this.mouseOverMenu;
-        const y = this.mouseLeaveMenu;
+            const x = this.mouseOverMenu;
+            const y = this.mouseLeaveMenu;
 
-        x();
-        setTimeout(y, 1000);
-      } else {
-        menu.style.backgroundColor = '';
-      }
+            x();
+            setTimeout(y, 1000);
+        } else {
+            menu.style.backgroundColor = '';
+        }
     },
   },
   created() {
