@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "core-js": "^2.6.5",
@@ -35,7 +34,11 @@
     ],
     "rules": {
       "indent": "off",
-      "camelcase": "off"
+      "camelcase": "off",
+      "no-param-reassign": "off",
+      "no-plusplus": "off",
+      "max-len": "off",
+      "no-restricted-globals": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"
