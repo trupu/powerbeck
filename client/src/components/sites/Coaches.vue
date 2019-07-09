@@ -12,10 +12,13 @@
 </template>
 <script>
 import PageTitle from '../pieces/PageTitle.vue';
-import CoachesArray from '../../coaches.js';
+import CoachesArray from '../../coaches';
 
 export default {
   name: 'Coaches',
+  components: {
+      PageTitle,
+  },
   data() {
       return {
           array: CoachesArray,
@@ -75,7 +78,7 @@ export default {
             }
             circle[index].style.backgroundColor = '#000';
             circle[index].classList.add('circle-active');
-            index === circle.length ? index = 0 : index++;
+            index === circle.length ? index = 0 : index++;  // eslint-disable-line
     },
         // SLIDE ANIMATION
     slideEffect(array, index) {
@@ -93,7 +96,7 @@ export default {
         }, (500));
     },
         // EVENT WRAPPER
-    slider(index, time, i = 0) {
+    slider(index, time, pom = 0) {
         if (event) {
             const ev = event.target;
 
@@ -105,21 +108,21 @@ export default {
             main.style = '';
 
             this.slideEffect(this.array.CoachesArray, id);
-            id === (this.array.CoachesArray.length - 1) ? id = 0 : id++;
+            (id === (this.array.CoachesArray.length - 1)) ? id = 0 : id++;  // eslint-disable-line
 
             this.interval = setInterval(() => {
                 this.slideEffect(this.array.CoachesArray, id);
-                id === (this.array.CoachesArray.length - 1) ? id = 0 : id++;
+                (id === (this.array.CoachesArray.length - 1)) ? id = 0 : id++;  // eslint-disable-line
             }, time);
 
             return;
         }
-        this.slideEffect(this.array.CoachesArray, i);
-        i === (this.array.CoachesArray.length - 1) ? i = 0 : i++;
+        this.slideEffect(this.array.CoachesArray, pom);
+        (pom === (this.array.CoachesArray.length - 1)) ? pom = 0 : pom++;   // eslint-disable-line
 
         this.interval = setInterval(() => {
-            this.slideEffect(this.array.CoachesArray, i);
-            i === (this.array.CoachesArray.length - 1) ? i = 0 : i++;
+            this.slideEffect(this.array.CoachesArray, pom);
+            (pom === (this.array.CoachesArray.length - 1)) ? pom = 0 : pom++;   // eslint-disable-line
         }, time);
     },
   },
@@ -147,7 +150,7 @@ export default {
 
     transition: all .5s ease-in-out;
 
-    min-height: 300px;
+    height: 300px;
     width: 100%;
 
     .coach-image{
@@ -172,6 +175,7 @@ export default {
         grid-area: 1 / 2 / 1 / span 2;
 
         margin: 10px 5px;
+        padding: 0 20px;
 
         .coach-header_name{
             position: relative;
@@ -286,7 +290,7 @@ export default {
         .coach-image{
             grid-area: 1 / 1 / 1 / span 2;
             img{
-                width: 200px;
+                width: 150px;
                 height: auto;
             }
         }
@@ -296,7 +300,7 @@ export default {
             .coach-header_quotation{
               grid-area: 3 / 1 / 3 / 1;
 
-              font-size: 2em;
+              font-size: 1em;
               font-weight: 400;
             }
         }
@@ -307,4 +311,13 @@ export default {
     }
 }
 
+@media (min-width: 1024px){
+    .coaches-content{
+        .coach-image{
+            img{
+                width: 200px;
+            }
+        }
+    }
+}
 </style>
