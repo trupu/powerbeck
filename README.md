@@ -2,10 +2,10 @@
 
 ### how to start - server
 
-npm run dev
+cd server && npm run dev
 
 ### how to start - client 
 
-npm run serve 
+cd client && npm run serve 
 
 ### Vue-Cli
