@@ -7,7 +7,7 @@
                     span
                 h3
                     | Siłownia
-            ul.content-wrapper_list
+            ul.content-wrapper_list.list-disactive
                 li
                     | lorem ipsum dolor sit amet
                 li
@@ -23,7 +23,7 @@
                     span
                 h3
                     | Kickboxing
-            ul.content-wrapper_list
+            ul.content-wrapper_list.list-disactive
                 li
                     | lorem ipsum dolor sit amet
                 li
@@ -37,7 +37,7 @@
                     span
                 h3
                     | Fitness
-            ul.content-wrapper_list
+            ul.content-wrapper_list.list-disactive
                 li
                     | lorem ipsum dolor sit amet
                 li
@@ -54,6 +54,9 @@ export default {
     name: 'Activities',
     components: {
         ContentWrapper,
+    },
+    mounted() {
+        ContentWrapper.methods.wrapperRandomize();
     },
 };
 </script>
@@ -81,6 +84,11 @@ export default {
 
 @media (max-width: 768px){
     .activities-container{
+
+        align-items: center;
+        justify-content: center;
+
+        min-height: 700px;
         align-items: center;
         height: auto;
     }

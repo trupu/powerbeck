@@ -4,6 +4,32 @@
 <script>
 export default {
     name: 'ContentWrapper',
+    methods: {
+        wrapperRandomize() {
+            const lists = document.querySelectorAll('.list-disactive');
+            const wrappers = document.querySelectorAll('.content-wrapper');
+
+            const x = Math.floor(Math.random() * lists.length);
+
+            lists[x].classList.remove('list-disactive');
+            lists[x].classList.add('list-active');
+
+            wrappers.forEach((el) => {
+                el.addEventListener('click', this.wrapperTransition);
+            });
+        },
+        wrapperTransition() {
+            const ev = event.target;
+            const active = document.querySelector('.list-active');
+            const toActive = ev.closest('.content-wrapper').querySelector('.content-wrapper_list');
+
+            active.classList.remove('list-active');
+            active.classList.add('list-disactive');
+
+            toActive.classList.remove('list-disactive');
+            toActive.classList.add('list-active');
+        },
+    },
 };
 </script>
 <style lang='scss'>
@@ -23,6 +49,8 @@ export default {
 
             align-items: center;
             justify-content: center;
+
+            z-index: 150;
 
             font-size: 16px;
             background-color: rgba(0,0,0,.5);
@@ -101,8 +129,9 @@ export default {
 
             list-style-type: none;
             width: 100%;
-            
             padding: 10px;
+
+            transition: all 0.3s ease-in-out;
 
             li{
                 margin: 5px 0;
@@ -119,6 +148,17 @@ export default {
         .content-wrapper{
             width: 60%;
             box-shadow: 0px 0px 15px #000;
+        }
+    }
+
+    @media (max-width: 768px){
+        .list-active{
+            height:200px;
+            font-size: 12px;
+        }
+        .list-disactive{
+            height: 0;
+            opacity: 0;
         }
     }
 
@@ -165,7 +205,7 @@ export default {
 
                     i{
                         font-size: 2em;
-                    }   
+                    }
                 }
 
                 h3{
