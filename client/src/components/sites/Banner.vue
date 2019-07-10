@@ -25,15 +25,15 @@
                     a(href='#club')
                         li
                             | klub
-                    a(href='#')
-                        li
-                            | wideo
                     a(href='#sauna')
                         li
                             | sauna
                     a(href='#offer')
                         li
                             | oferta
+                    a(href='#photos')
+                        li
+                            | galeria
 
 
         section.banner-main
@@ -200,7 +200,7 @@ export default {
             left: 37%;
             top: -3px;
 
-            z-index: 100;
+            z-index: 190;
 
             opacity: 0;
             transform: translateY(-35px);
@@ -235,7 +235,7 @@ export default {
         display: flex;
         position: fixed;
 
-        z-index: 140;
+        z-index: 200;
 
         top: 0;
         left: 0;
@@ -310,7 +310,7 @@ export default {
             top: -500px;
             left: 0;
 
-            z-index: 150;
+            z-index: 210;
 
             padding: 50px 0;
 

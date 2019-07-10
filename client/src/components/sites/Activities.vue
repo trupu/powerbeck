@@ -1,5 +1,5 @@
 <template lang='pug'>
-    div.activities-container
+    div#club.activities-container
         div.content-wrapper
             div.content-wrapper_header-flexbox
                 div.content-wrapper_anim

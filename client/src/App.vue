@@ -3,6 +3,7 @@
     <Banner />
     <Coaches />
     <Activities />
+    <Services />
   </div>
 </template>
 
@@ -10,6 +11,7 @@
 import Banner from './components/sites/Banner.vue';
 import Coaches from './components/sites/Coaches.vue';
 import Activities from './components/sites/Activities.vue';
+import Services from './components/sites/Services.vue';
 
 export default {
   name: 'app',
@@ -17,6 +19,7 @@ export default {
     Banner,
     Coaches,
     Activities,
+    Services,
   },
 };
 </script>
