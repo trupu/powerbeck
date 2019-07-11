@@ -72,7 +72,6 @@ export default {
     align-items: center;
 
     margin: 0;
-    padding: 0;
 
     .service_content{
         display: flex;
@@ -80,7 +79,7 @@ export default {
         text-align: center;
 
         margin: 10px 0;
-        padding: 0 5px;
+        padding: 5px;
 
         .service_content__offer{
             display: flex;
@@ -130,7 +129,6 @@ export default {
     .service, .service-reverse{
         .service_content{
             margin: 0 10px;
-            padding: 0;
         }
         .service_image{
             height: 100%;

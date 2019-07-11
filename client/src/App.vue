@@ -4,6 +4,7 @@
     <Coaches />
     <Activities />
     <Services />
+    <Offer />
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import Banner from './components/sites/Banner.vue';
 import Coaches from './components/sites/Coaches.vue';
 import Activities from './components/sites/Activities.vue';
 import Services from './components/sites/Services.vue';
+import Offer from './components/sites/Offer.vue';
 
 export default {
   name: 'app',
@@ -20,6 +22,7 @@ export default {
     Coaches,
     Activities,
     Services,
+    Offer,
   },
 };
 </script>
