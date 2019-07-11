@@ -80,7 +80,7 @@ export default {
         text-align: center;
 
         margin: 10px 0;
-        padding: 0;
+        padding: 0 5px;
 
         .service_content__offer{
             display: flex;
@@ -102,9 +102,10 @@ export default {
     }
 
     .service_image{
+        display: flex;
         img{
-            width: 100%;
             height: auto;
+            width: 100%;
         }
     }
 }
