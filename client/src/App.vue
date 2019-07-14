@@ -5,6 +5,7 @@
     <Activities />
     <Services />
     <Offer />
+    <Photos />
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import Coaches from './components/sites/Coaches.vue';
 import Activities from './components/sites/Activities.vue';
 import Services from './components/sites/Services.vue';
 import Offer from './components/sites/Offer.vue';
+import Photos from './components/sites/Photos.vue';
 
 export default {
   name: 'app',
@@ -23,6 +25,7 @@ export default {
     Activities,
     Services,
     Offer,
+    Photos,
   },
 };
 </script>
