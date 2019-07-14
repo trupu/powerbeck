@@ -6,6 +6,7 @@
     <Services />
     <Offer />
     <Photos />
+    <Footer />
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import Activities from './components/sites/Activities.vue';
 import Services from './components/sites/Services.vue';
 import Offer from './components/sites/Offer.vue';
 import Photos from './components/sites/Photos.vue';
+import Footer from './components/sites/Footer.vue';
 
 export default {
   name: 'app',
@@ -26,6 +28,7 @@ export default {
     Services,
     Offer,
     Photos,
+    Footer,
   },
 };
 </script>
