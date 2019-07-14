@@ -51,23 +51,21 @@ export default {
         .offer-container{
             align-items: center;
             justify-items: center;
+            background-size: 400%;
         }
     }
 
     @media (min-width: 768px){
         .offer-container{
             grid-template-columns: 1fr 1fr 1fr;
-
             background-size: 200%;
-            
-
         }
     }
 
     @media (min-width: 1024px){
         .offer-container{
-            background-size: 100%;
-            background-position: 0 0;
+            background-size: 120%;
+            background-position: 50% 0;
         }
     }
 </style>

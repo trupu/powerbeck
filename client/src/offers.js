@@ -24,9 +24,9 @@ const a6 = new Offer('roczny');
 
 a1.setData('1', 'Jednorazowe Wejście', 'Jednorazowe wejście na siłowinię', 20);
 a2.setData('10', 'Karnet 10 wejść', '10 wejść w ciągu miesiąca', 80);
-a3.setData('1msc', 'Karnet OPEN Miesięczny', 'Miesięczny wstęp na siłownię', 120);
-a4.setData('3msc', 'Karnet OPEN 3-Miesięczny', '3-Miesięczny wstęp na siłownię', 300);
-a5.setData('6msc', 'Karnet OPEN Półroczny', 'Półroczny wstęp na siłownię', 500);
-a6.setData('rok', 'Karnet OPEN Roczny', 'Roczny wstęp na siłownię', 900);
+a3.setData('1msc', 'Karnet OPEN Miesięczny', 'Miesięczny wstęp na siłownię + salkę fitness + strefę cardio', 120);
+a4.setData('3msc', 'Karnet OPEN 3-Miesięczny', '3-Miesięczny wstęp na siłownię + salkę fitness + strefę cardio', 300);
+a5.setData('6msc', 'Karnet OPEN Półroczny', 'Półroczny wstęp na siłownię + salkę fitness + strefę cardio', 500);
+a6.setData('rok', 'Karnet OPEN Roczny', 'Roczny wstęp na siłownię + salkę fitness + strefę cardio', 900);
 
 export default { offersArray };

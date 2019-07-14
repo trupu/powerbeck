@@ -14,8 +14,6 @@ export default {
             lists[x].classList.remove('offer-list-disactive');
             lists[x].classList.add('offer-list-active');
 
-            console.log(lists[x]);
-
             wrappers.forEach((el) => {
                 el.addEventListener('click', this.wrapperTransition);
             });
@@ -110,7 +108,6 @@ export default {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    
 
                     &::before, &::after{
                         content: '';
@@ -149,6 +146,8 @@ export default {
             margin: 0;
             .offer-wrapper_header{
                 z-index: 100;
+                padding: 5px 20px;
+                justify-content: flex-start;
             }
             .offer-wrapper_content{
                 transition: all .3s ease-in-out;
@@ -182,9 +181,8 @@ export default {
             .offer-wrapper_content{
                 display: flex;
                 flex-flow: column;
-
                 height: 100%;
-                
+
                 justify-content: flex-end;
             }
 
@@ -196,9 +194,14 @@ export default {
 
     @media (min-width: 1024px){
         .offer-wrapper{
+            height: auto;
+            min-height: 300px;
             .offer-wrapper_header{
+
+                flex-flow: column;
                 .header__title{
                     font-size: 1.4em;
+                    margin: 10px 0;
                 }
             }
             .offer-wrapper_content{
@@ -212,4 +215,3 @@ export default {
         }
     }
 </style>
-
