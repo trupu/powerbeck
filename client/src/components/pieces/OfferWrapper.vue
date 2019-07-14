@@ -4,7 +4,35 @@
 <script>
 export default {
     name: 'OfferWrapper',
-}
+    methods: {
+        wrapperRandomize() {
+            const lists = document.querySelectorAll('.offer-list-disactive');
+            const wrappers = document.querySelectorAll('.offer-wrapper');
+
+            const x = Math.floor(Math.random() * lists.length);
+
+            lists[x].classList.remove('offer-list-disactive');
+            lists[x].classList.add('offer-list-active');
+
+            console.log(lists[x]);
+
+            wrappers.forEach((el) => {
+                el.addEventListener('click', this.wrapperTransition);
+            });
+        },
+        wrapperTransition() {
+            const ev = event.target;
+            const active = document.querySelector('.offer-list-active');
+            const toActive = ev.closest('.offer-wrapper').querySelector('.offer-wrapper_content');
+
+            active.classList.remove('offer-list-active');
+            active.classList.add('offer-list-disactive');
+
+            toActive.classList.remove('offer-list-disactive');
+            toActive.classList.add('offer-list-active');
+        },
+    },
+};
 </script>
 <style lang="scss">
     .offer-wrapper{
@@ -18,6 +46,10 @@ export default {
         color: #fff;
 
         text-align: center;
+
+        margin: 10px 0;
+
+        transition: all .5s ease-in-out;
 
         .offer-wrapper_header{
             display: flex;
@@ -112,6 +144,26 @@ export default {
         }
     }
 
+    @media (max-width: 480px){
+        .offer-wrapper{
+            margin: 0;
+            .offer-wrapper_header{
+                z-index: 100;
+            }
+            .offer-wrapper_content{
+                transition: all .3s ease-in-out;
+            }
+            .offer-list-active{
+                height: 100px;
+                opacity: 1;
+            }
+            .offer-list-disactive{
+                height: 0;
+                opacity: 0;
+            }
+        }
+    }
+
     @media (min-width: 480px){
         .offer-wrapper{
             width: 80%;
@@ -123,6 +175,10 @@ export default {
         .offer-wrapper{
             height: 200px;
 
+            transition: all .3s ease-in-out;
+
+            margin: 20px 0;
+
             .offer-wrapper_content{
                 display: flex;
                 flex-flow: column;
@@ -131,13 +187,27 @@ export default {
                 
                 justify-content: flex-end;
             }
+
+            &:hover{
+                transform: scale(1.1);
+            }
         }
     }
 
     @media (min-width: 1024px){
         .offer-wrapper{
             .offer-wrapper_header{
-                
+                .header__title{
+                    font-size: 1.4em;
+                }
+            }
+            .offer-wrapper_content{
+                .content{
+                    font-size: 1.2em;
+                }
+                .price{
+                    font-size: 1.4em;
+                }
             }
         }
     }

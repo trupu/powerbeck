@@ -8,7 +8,7 @@
                     span.logo
                 div.header__title
                     | {{ values.logoHeader }}
-            div.offer-wrapper_content
+            div.offer-wrapper_content.offer-list-disactive
                 p.content
                     | {{ values.description }}
                 h3.price
@@ -25,7 +25,10 @@ export default {
     },
     data() {
         return offersArray;
-    }
+    },
+    mounted() {
+        OfferWrapper.methods.wrapperRandomize();
+    },
 };
 </script>
 <style lang="scss">
@@ -38,9 +41,9 @@ export default {
         background-size: 300%;
         background-repeat: no-repeat;
         background-position: 48% 0;
-        background-attachment: fixed;
 
         height: auto;
+        min-height: 500px;
         padding: 30px 0;
     }
 
@@ -54,6 +57,17 @@ export default {
     @media (min-width: 768px){
         .offer-container{
             grid-template-columns: 1fr 1fr 1fr;
+
+            background-size: 200%;
+            
+
+        }
+    }
+
+    @media (min-width: 1024px){
+        .offer-container{
+            background-size: 100%;
+            background-position: 0 0;
         }
     }
 </style>
