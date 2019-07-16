@@ -325,7 +325,7 @@ export default {
             .nav-menu_links__exit{
                 position: absolute;
                 top: 15px;
-                right: 30px;
+                right: 50px;
                 font-size: 1.5em;
 
                 color: #fff;
@@ -474,7 +474,11 @@ export default {
     }
 
     @media (max-width:768px){
-
+        .nav-menu{
+            .nav-menu_menu{
+                margin: 0 20px;
+            }
+        }
         .menu-li-anim{
             animation: menu-li both;
         }
