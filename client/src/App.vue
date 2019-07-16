@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <LoadingScreen />
     <Banner />
     <Coaches />
     <Activities />
@@ -19,9 +20,12 @@ import Offer from './components/sites/Offer.vue';
 import Photos from './components/sites/Photos.vue';
 import Footer from './components/sites/Footer.vue';
 
+import LoadingScreen from './components/pieces/LoadingScreen.vue';
+
 export default {
   name: 'app',
   components: {
+    LoadingScreen,
     Banner,
     Coaches,
     Activities,
