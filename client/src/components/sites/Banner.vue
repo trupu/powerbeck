@@ -44,20 +44,22 @@
                     | Gym & Fitness
             div.banner-main_buttons
                 button.button-medium
-                    | OFERTA
-                button.button-medium-reverse
+                    | KONTAKT
+                button.button-medium-reverse(@click='$refs.LF.showLoginForm()')
                     | LOGOWANIE
             a(href='#coaches')
                 i(class='fas fa-chevron-down')
-
+        <LoginForm ref='LF'/>
 </template>
 <script>
 import Buttons from '../pieces/Buttons.vue';
+import LoginForm from '../pieces/LoginForm.vue';
 
 export default {
   name: 'Banner',
   components: {
       Buttons,
+      LoginForm,
   },
   data() {
       return {
@@ -154,6 +156,8 @@ export default {
   },
   destroyed() {
     window.removeEventListener('scroll', this.scrollMenu);
+  },
+  mounted() {
   },
 };
 </script>
@@ -501,6 +505,9 @@ export default {
     }
 
     @media (min-width: 768px){
+        .container{
+            background-size: 200%;
+        }
         .nav-menu_show{
             left: 45%;
         }
@@ -581,6 +588,9 @@ export default {
     }
 
     @media (min-width: 1024px){
+        .container{
+            background-size: cover;
+        }
         .nav-menu_show{
             left: 47%;
         }
