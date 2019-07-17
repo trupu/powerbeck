@@ -59,6 +59,11 @@ export default {
   components: {
       Buttons,
   },
+  data() {
+      return {
+          bannerTimeout: false,
+      };
+  },
   methods: {
     // mobiles: show hamburger-menu
     showMenu() {
@@ -135,7 +140,10 @@ export default {
             const y = this.mouseLeaveMenu;
 
             x();
-            setTimeout(y, 1000);
+            if (this.bannerTimeout) { // avoiding timeout overlaying
+                clearTimeout(this.bannerTimeout);
+            }
+            this.bannerTimeout = setTimeout(y, 3000);
         } else {
             menu.style.backgroundColor = '';
         }
