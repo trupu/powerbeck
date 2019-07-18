@@ -1,36 +1,67 @@
 <template lang="pug">
-
-div.login-form-container(v-if='this.showForm')
-    div.login-form-wrapper
-        div.form-title
-            | Panel Administracyjny
-        form(action='/login' method='POST')
-            label
-                i(class='fas fa-user')
-                input(type='text' name='login' placeholder='Login')
-                <br />
-            label
-                i(class='fas fa-lock')
-                input(type='password' name='password' placeholder='Hasło')
-                <br />
-            button
-                | Zaloguj
-            i(class='fas fa-times exit-button' @click='hideLoginForm()')
+div
+    div.login-form-container(v-if='this.isLoginForm')
+        div.login-form-wrapper
+            div.form-title
+                | Panel Administracyjny
+            form(action='/login' method='POST')
+                label
+                    i(class='fas fa-user')
+                    input(type='text' name='login' placeholder='Login' v-model='loginFormLogin' required)
+                    <br />
+                label
+                    i(class='fas fa-lock')
+                    input(type='password' name='password' placeholder='Hasło' required)
+                    <br />
+                button
+                    | Zaloguj
+                i(class='fas fa-times exit-button')
+    div.login-form-container(v-if='this.isContactForm')
+        div.contact-form-wrapper
+            div.form-title
+                | Kontakt
+            form(action='/contact' method='POST')
+                label
+                    i(class='fas fa-user')
+                    input(type='text' name='login' placeholder='imię' v-model='contactFormName' required)
+                    <br />
+                label
+                    i(class='fas fa-at')
+                    input(type='email' name='email' placeholder='e-mail' v-model='contactFormEmail' required)
+                    <br />
+                label.text-area-label
+                    i(class='fas fa-envelope')
+                    textarea(name='message' rows='8' cols='50' v-model='contactFormMessage' required)
+                    <br />
+                button.contact-form-button
+                    | Wyślij
+                i(class='fas fa-times exit-button' @click='hideContactForm()')
 </template>
 <script>
 export default {
     name: 'LoginForm',
     data() {
         return {
-            showForm: false,
+            isLoginForm: false,
+            isContactForm: false,
+            contactFormName: '',
+            contactFormEmail: '',
+            contactFormMessage: '',
+            loginFormLogin: '',
         };
     },
     methods: {
         showLoginForm() {
-            this.showForm = true;
+            this.isLoginForm = true;
+        },
+        showContactForm() {
+            this.isContactForm = true;
         },
         hideLoginForm() {
-            this.showForm = false;
+            this.isLoginForm = false;
+        },
+        hideContactForm() {
+            this.isContactForm = false;
         },
     },
 };
@@ -56,6 +87,14 @@ $default_site_color: #9e0012;
     justify-content: center;
 
     .login-form-wrapper{
+        height: 60%;
+    }
+
+    .contact-form-wrapper{
+        height: 80%;
+    }
+
+    .login-form-wrapper, .contact-form-wrapper{
         display: flex;
         flex-flow: column;
         align-items: center;
@@ -67,7 +106,6 @@ $default_site_color: #9e0012;
         color: #fff;
 
         width: 40%;
-        height: 60%;
 
         padding: 50px 20px;
 
@@ -118,6 +156,20 @@ $default_site_color: #9e0012;
                     }
                 }
             }
+
+            .text-area-label{
+                width: 100%;
+                height: auto;
+                align-items: flex-start;
+                border-bottom: 1px solid $default_site_color;
+                textarea{
+                    border: none;
+                    background: none;
+                    color: #fff;
+                    overflow-y: hidden;
+                }
+            }
+
             button{
                 width: 200px;
                 height: 40px;
@@ -134,6 +186,9 @@ $default_site_color: #9e0012;
                     cursor: pointer;
                     background-color: $default_site_color;
                 }
+            }
+            .contact-form-button{
+                float: right;
             }
         }
 

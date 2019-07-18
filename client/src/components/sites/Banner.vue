@@ -43,7 +43,7 @@
                 span.banner-main_subtitle
                     | Gym & Fitness
             div.banner-main_buttons
-                button.button-medium
+                button.button-medium(@click='$refs.LF.showContactForm()')
                     | KONTAKT
                 button.button-medium-reverse(@click='$refs.LF.showLoginForm()')
                     | LOGOWANIE
