@@ -15,7 +15,7 @@ div
                     <br />
                 button
                     | Zaloguj
-                i(class='fas fa-times exit-button')
+                i(class='fas fa-times exit-button' @click='hideLoginForm()')
     div.login-form-container(v-if='this.isContactForm')
         div.contact-form-wrapper
             div.form-title
