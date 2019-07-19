@@ -4,7 +4,7 @@ div
         div.login-form-wrapper
             div.form-title
                 | Panel Administracyjny
-            form(action='/login' method='POST')
+            div.form
                 label
                     i(class='fas fa-user')
                     input(type='text' name='login' placeholder='Login' v-model='loginFormLogin' required)
@@ -13,7 +13,7 @@ div
                     i(class='fas fa-lock')
                     input(type='password' name='password' placeholder='Hasło' required)
                     <br />
-                button
+                button(@click='lm.LoginService.getData()')
                     | Zaloguj
                 i(class='fas fa-times exit-button' @click='hideLoginForm()')
     div.login-form-container(v-if='this.isContactForm')
@@ -38,16 +38,20 @@ div
                 i(class='fas fa-times exit-button' @click='hideContactForm()')
 </template>
 <script>
+import loginMethods from '../methods/loginMethod';
+
 export default {
     name: 'LoginForm',
     data() {
         return {
+            lm: loginMethods,
             isLoginForm: false,
             isContactForm: false,
             contactFormName: '',
             contactFormEmail: '',
             contactFormMessage: '',
             loginFormLogin: '',
+            serverUrlLogin: 'http://localhost:5000/login',
         };
     },
     methods: {
@@ -120,7 +124,7 @@ $default_site_color: #9e0012;
             margin-bottom: 20px;
         }
 
-        form{
+        .form{
             label{
                 position: relative;
 
