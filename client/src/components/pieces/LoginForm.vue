@@ -11,10 +11,16 @@ div
                     <br />
                 label
                     i(class='fas fa-lock')
-                    input(type='password' name='password' placeholder='Hasło' required)
+                    input(type='password' name='password' placeholder='Hasło' v-model='loginFormPassword' required)
                     <br />
-                button(@click='lm.LoginService.getData()')
+                button(@click='checkLoginData()' :disabled='loginLoading')
                     | Zaloguj
+                div.loading-anim(v-if='loginLoading')
+                    div.circle
+                    div.circle
+                    div.circle
+                p.login-error(v-if='loginStatus')
+                    | {{ loginStatus }}
                 i(class='fas fa-times exit-button' @click='hideLoginForm()')
     div.login-form-container(v-if='this.isContactForm')
         div.contact-form-wrapper
@@ -51,7 +57,9 @@ export default {
             contactFormEmail: '',
             contactFormMessage: '',
             loginFormLogin: '',
-            serverUrlLogin: 'http://localhost:5000/login',
+            loginFormPassword: '',
+            loginStatus: '',
+            loginLoading: false,
         };
     },
     methods: {
@@ -67,12 +75,47 @@ export default {
         hideContactForm() {
             this.isContactForm = false;
         },
+        // checking login data
+        checkLoginData() {
+            this.loginLoading = true;
+            const data = this.lm.LoginService.getData();
+            if (data) {
+                data.then((val) => {
+                    /* eslint-disable-next-line */
+                    const login = val.find((el) => el.login === this.loginFormLogin );
+                    if (login && login.password === this.loginFormPassword) {
+                        console.log('Poprawnie zalogowano!');
+                    } else {
+                        this.loginStatus = 'Niepoprawne dane logowania!';
+                    }
+                    this.loginLoading = false;
+                });
+            } else {
+                this.loginLoading = false;
+                this.loginStatus = 'Błąd połączenia z serwerem!';
+            }
+        },
     },
 };
 </script>
 <style lang="scss">
 
 $default_site_color: #9e0012;
+
+@keyframes loading-button{
+    0%{
+        transform: translateY(0);
+    }
+    50%{
+        transform: translateY(-10px);
+    }
+    80%{
+        transform: translateY(0);
+    }
+    100%{
+
+    }
+}
 
 .login-form-container{
     display: flex;
@@ -178,6 +221,11 @@ $default_site_color: #9e0012;
                 width: 200px;
                 height: 40px;
 
+                display: flex;
+                flex-flow: row;
+                align-items: center;
+                justify-content: center;
+
                 background: none;
                 border: 1px solid $default_site_color;
                 color: #fff;
@@ -190,9 +238,51 @@ $default_site_color: #9e0012;
                     cursor: pointer;
                     background-color: $default_site_color;
                 }
+
+                .loading-main{
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    border: 2px solid $default_site_color;
+
+                    margin: 0 10px;
+                }
             }
             .contact-form-button{
                 float: right;
+            }
+
+            .loading-anim{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                width: 100%;
+
+                position: absolute;
+                left: 0;
+                bottom: 10%;
+
+                .circle{
+                    height: 10px;
+                    width: 10px;
+                    border-radius: 50%;
+                    background-color: $default_site_color;
+                    margin: 40px 5px 0 5px;
+
+                    animation: loading-button 1s infinite both ease-in-out;
+                }
+                @for $i from 1 to 4{
+                    .circle:nth-child(#{$i}){
+                        animation-delay: 0s + ($i*5/100);
+                    }
+                }
+            }
+
+            .login-error{
+                color: $default_site_color;
+                font-size: .8em;
+                text-align: center;
             }
         }
 

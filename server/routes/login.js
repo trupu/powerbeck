@@ -6,13 +6,16 @@ const mongoUrl = 'mongodb+srv://admin:adminzsp5@powerbeck-rpnty.mongodb.net/test
 
 const login = express.Router();
 
+var client;
+
 login.post('/', async (req,res) => {
     const data = await loadData();
     res.send( await data.find({}).toArray());
+    client.close();
 });
 
 async function loadData() {
-    const client = await mongodb.MongoClient.connect(
+    client = await mongodb.MongoClient.connect(
         mongoUrl, {
             useNewUrlParser : true
         });
