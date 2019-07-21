@@ -77,14 +77,17 @@ export default {
         },
         // checking login data
         checkLoginData() {
+            this.loginStatus = '';
             this.loginLoading = true;
             const data = this.lm.LoginService.getData();
             if (data) {
                 data.then((val) => {
                     /* eslint-disable-next-line */
                     const login = val.find((el) => el.login === this.loginFormLogin );
-                    if (login && login.password === this.loginFormPassword) {
+                    if (login && login.password === this.loginFormPassword) { // Succesful login
                         console.log('Poprawnie zalogowano!');
+                        this.isLogged = true;
+                        window.location.href = '/adminpanel';
                     } else {
                         this.loginStatus = 'Niepoprawne dane logowania!';
                     }
