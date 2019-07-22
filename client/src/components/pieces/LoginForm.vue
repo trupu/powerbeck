@@ -319,7 +319,7 @@ $default_site_color: #9e0012;
 
 @media (max-width: 768px){
     .login-form-container{
-        .login-form-wrapper{
+        .login-form-wrapper, .contact-form-wrapper{
             width: 60%;
         }
     }
@@ -327,7 +327,7 @@ $default_site_color: #9e0012;
 
 @media (max-width: 480px){
     .login-form-container{
-        .login-form-wrapper{
+        .login-form-wrapper, .contact-form-wrapper{
             width: 100%;
 
             .exit-button{
