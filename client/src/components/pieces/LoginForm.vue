@@ -98,7 +98,6 @@ export default {
                     if (login && login.password === this.loginFormPassword) { // Succesful login
                         this.isLogged = true;
                         this.$router.push('/adminpanel');
-                        console.log(this.$router);
                     } else {
                         this.loginStatus = 'Niepoprawne dane logowania!';
                     }
