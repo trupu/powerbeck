@@ -15,8 +15,8 @@
                     i(class='fas fa-arrow-right')
 </template>
 <script>
-import PageTitle from '../pieces/PageTitle.vue';
-import galleryArray from '../../gallery';
+import PageTitle from '../../pieces/PageTitle.vue';
+import galleryArray from '../../../mixins/gallery';
 
 export default {
     name: 'Photos',
@@ -33,7 +33,7 @@ export default {
     $default_site_color: #9E0012;
 
 .photos-container{
-    background-image: url('../../assets/section6_bg.jpg');
+    background-image: url('../../../assets/section6_bg.jpg');
     background-size: 300%;
     background-repeat: no-repeat;
 

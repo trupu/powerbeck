@@ -25,7 +25,7 @@
                         span
                             | Cena: 30zł
             div.service_image
-                img(src='../../assets/masage.jpg')
+                img(src='../../../assets/masage.jpg')
         div.service-reverse
             div.service_content
                 div.page-title
@@ -51,10 +51,10 @@
                         span
                             | Cena: 30zł
             div.service_image
-                img(src='../../assets/sauna.jpg')
+                img(src='../../../assets/sauna.jpg')
 </template>
 <script>
-import PageTitle from '../pieces/PageTitle.vue';
+import PageTitle from '../../pieces/PageTitle.vue';
 
 export default {
     name: 'Services',

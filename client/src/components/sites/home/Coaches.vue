@@ -11,8 +11,8 @@
 
 </template>
 <script>
-import PageTitle from '../pieces/PageTitle.vue';
-import CoachesArray from '../../coaches';
+import PageTitle from '../../pieces/PageTitle.vue';
+import CoachesArray from '../../../mixins/coaches';
 
 export default {
   name: 'Coaches',
@@ -274,7 +274,7 @@ export default {
 
 @media (min-width: 768px){
     #coaches{
-        background-image: url('../../assets/s2_bg.png');
+        background-image: url('../../../assets/s2_bg.png');
         background-size: 25%;
         background-repeat: no-repeat;
         background-position: 5% 10%;

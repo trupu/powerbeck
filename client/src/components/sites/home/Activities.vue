@@ -48,7 +48,7 @@
                     | lorem ipsum dolor sit amet
 </template>
 <script>
-import ContentWrapper from '../pieces/ContentWrapper.vue';
+import ContentWrapper from '../../pieces/ContentWrapper.vue';
 
 export default {
     name: 'Activities',
@@ -62,7 +62,7 @@ export default {
 </script>
 <style lang='scss'>
 .activities-container{
-    background-image: url('../../assets/section3_bg.jpg');
+    background-image: url('../../../assets/section3_bg.jpg');
     background-size: 400%;
     background-repeat: no-repeat;
     background-position: 5% 20%;

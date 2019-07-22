@@ -15,8 +15,8 @@
                     | Cena: {{ values.price }}zł
 </template>
 <script>
-import OfferWrapper from '../pieces/OfferWrapper.vue';
-import offersArray from '../../offers';
+import OfferWrapper from '../../pieces/OfferWrapper.vue';
+import offersArray from '../../../mixins/offers';
 
 export default {
     name: 'Offer',
@@ -37,7 +37,7 @@ export default {
         grid-template-columns: 1fr;
         width: 100vw;
 
-        background-image: url('../../assets/section5_bg.jpg');
+        background-image: url('../../../assets/section5_bg.jpg');
         background-size: 300%;
         background-repeat: no-repeat;
         background-position: 48% 0;

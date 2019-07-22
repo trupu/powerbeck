@@ -5,7 +5,7 @@
         nav.nav-menu(@mouseover='mouseOverMenu()' ref='menuScroller')
             div.nav-menu_logo
                 a.nav-menu_logo(href='/')
-                    img(src='../../assets/logo.png')
+                    img(src='../../../assets/logo.png')
                     span.nav-menu_logo__title
                         | powerbeck
             div.nav-menu_menu(@click='showMenu()' ref='menuButton')
@@ -52,8 +52,8 @@
         <LoginForm ref='LF'/>
 </template>
 <script>
-import Buttons from '../pieces/Buttons.vue';
-import LoginForm from '../pieces/LoginForm.vue';
+import Buttons from '../../pieces/Buttons.vue';
+import LoginForm from '../../pieces/LoginForm.vue';
 
 export default {
   name: 'Banner',
@@ -198,7 +198,7 @@ export default {
         width:100vw;
         height: 100vh;
 
-        background-image: url('../../assets/banner_bg.jpg');
+        background-image: url('../../../assets/banner_bg.jpg');
         background-size: 450%;
         background-repeat: no-repeat;
         background-position: 60% 50%;

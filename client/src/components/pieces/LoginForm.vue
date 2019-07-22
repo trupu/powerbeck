@@ -7,11 +7,11 @@ div
             div.form
                 label
                     i(class='fas fa-user')
-                    input(type='text' name='login' placeholder='Login' v-model='loginFormLogin' required)
+                    input(type='text' name='login' placeholder='Login' v-model='loginFormLogin' autocomplete='off' required)
                     <br />
                 label
                     i(class='fas fa-lock')
-                    input(type='password' name='password' placeholder='Hasło' v-model='loginFormPassword' required)
+                    input(type='password' name='password' placeholder='Hasło' v-model='loginFormPassword' autocomplete='off' required)
                     <br />
                 button(@click='checkLoginData()' :disabled='loginLoading')
                     | Zaloguj
@@ -26,7 +26,7 @@ div
         div.contact-form-wrapper
             div.form-title
                 | Kontakt
-            form(action='/contact' method='POST')
+            form(action='/contact' method='POST' autocomplete='off')
                 label
                     i(class='fas fa-user')
                     input(type='text' name='login' placeholder='imię' v-model='contactFormName' required)
@@ -75,8 +75,19 @@ export default {
         hideContactForm() {
             this.isContactForm = false;
         },
+        // basic validation
+        validateForm() {
+            if (this.loginFormLogin === '' || this.loginFormPassword === '') {
+                return false;
+            }
+            return true;
+        },
         // checking login data
         checkLoginData() {
+            if (!this.validateForm()) {
+                this.loginStatus = 'Wypełnij wszystkie pola!';
+                return;
+            }
             this.loginStatus = '';
             this.loginLoading = true;
             const data = this.lm.LoginService.getData();
@@ -85,9 +96,9 @@ export default {
                     /* eslint-disable-next-line */
                     const login = val.find((el) => el.login === this.loginFormLogin );
                     if (login && login.password === this.loginFormPassword) { // Succesful login
-                        console.log('Poprawnie zalogowano!');
                         this.isLogged = true;
-                        window.location.href = '/adminpanel';
+                        this.$router.push('/adminpanel');
+                        console.log(this.$router);
                     } else {
                         this.loginStatus = 'Niepoprawne dane logowania!';
                     }
@@ -170,7 +181,7 @@ $default_site_color: #9e0012;
             margin-bottom: 20px;
         }
 
-        .form{
+        .form, form{
             label{
                 position: relative;
 
