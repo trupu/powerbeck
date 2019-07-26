@@ -4,12 +4,12 @@
             <router-link to='/'>Strona Główna</router-link>
             button.logout(@click='logout')
                 | Wyloguj
-        div.grid-wrapper
+        div.grid-wrapper(v-if='adminWrapper')
             div.admin-content(@click='check()' data-url='coaches')
                 i(class='fas fa-users')
                 p.content
                     | Trenerzy
-            div.admin-content(@click='check()' data-url='offer')
+            div.admin-content(@click='check()' data-url='offers')
                 i(class='far fa-newspaper')
                 p.content
                     | Karnety
@@ -17,10 +17,27 @@
                 i(class='fas fa-camera')
                 p.content
                     | Zdjęcia
+        div.content-container(v-if='coaches')
+            | TRENERZY
+        div.content-container(v-if='offers')
+            div.method-get
+                | Karnety
+            div.method-post
+            div.method-update
+        div.content-container(v-if='gallery')
+            | Galeria
 </template>
 <script>
 export default {
     name: 'AdminPanel',
+    data() {
+        return {
+            adminWrapper: true,
+            coaches: false,
+            offers: false,
+            gallery: false,
+        }
+    },
     methods: {
         logout() {
             // eslint-disable-next-line
@@ -34,7 +51,8 @@ export default {
             if(!event.target.classList.contains('admin-content')){
                 ev = event.target.closest('.admin-content');
             }
-            this.$router.push(`adminpanel/${ev.attributes['data-url'].value}`);
+            this[ev.attributes['data-url'].value] = true;
+            this.adminWrapper = false;
         },
     },
 };
@@ -130,6 +148,16 @@ $default_site_color: #9E0012;
                     margin: 10px 0;
                 }
             }
+        }
+
+        .content-container{
+            display: flex;
+
+            color: #fff;
+            background-color: rgba(0,0,0,.8);
+            width: 100vw;
+            min-height: 300px;
+            padding: 10px 5px;
         }
     }
 
