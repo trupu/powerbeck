@@ -4,10 +4,19 @@
             <router-link to='/'>Strona Główna</router-link>
             button.logout(@click='logout')
                 | Wyloguj
-        div.banner
-            | panel administratora
-        div.admin-panel
-            div.admin-content
+        div.grid-wrapper
+            div.admin-content(@click='check()' data-url='coaches')
+                i(class='fas fa-users')
+                p.content
+                    | Trenerzy
+            div.admin-content(@click='check()' data-url='offer')
+                i(class='far fa-newspaper')
+                p.content
+                    | Karnety
+            div.admin-content(@click='check()' data-url='gallery')
+                i(class='fas fa-camera')
+                p.content
+                    | Zdjęcia
 </template>
 <script>
 export default {
@@ -16,6 +25,16 @@ export default {
         logout() {
             // eslint-disable-next-line
             console.log('Wylogowano!');
+        },
+        checkIsLogged() {
+            // checking if admin is logged in
+        },
+        check() {
+            let ev = event.target;
+            if(!event.target.classList.contains('admin-content')){
+                ev = event.target.closest('.admin-content');
+            }
+            this.$router.push(`adminpanel/${ev.attributes['data-url'].value}`);
         },
     },
 };
@@ -30,6 +49,14 @@ $default_site_color: #9E0012;
         justify-content: center;
         align-items: center;
         width: 100vw;
+        min-height: 100vh;
+
+        background-image: url('../../../assets/banner_bg.jpg');
+        background-repeat: no-repeat;
+        background-size: 400%;
+        background-position: 50% 50%;
+        background-attachment: fixed;
+
         .nav-bar{
             position: fixed;
             top: 0;
@@ -62,60 +89,85 @@ $default_site_color: #9E0012;
                 }
             }
         }
-        .banner{
-            background-image: url('../../../assets/banner_bg.jpg');
-            background-repeat: no-repeat;
-            background-size: 200%;
-            background-position: 50% 50%;
-            height: 40vh;
-            width: 100%;
-
-            display: flex;
+        .grid-wrapper{
+            display: grid;
             align-items: center;
+            justify-items: center;
             justify-content: center;
-            text-align: center;
-            text-transform: uppercase;
-            text-shadow: 2px 2px 8px #000;
 
-            font-weight: 700;
-            font-size: 3em;
-
-            color: rgba(255,255,255,.7);
-        }
-
-        .admin-panel{
-            width: 100%;
-            height: 400px;
-
-            background-color: #fff;
-            color: #000;
+            width: 80%;
+            height: 80%;
+            background-attachment: fixed;
+            
+            grid-template-columns: 1fr;
 
             .admin-content{
                 display: flex;
-                align-items:center;
+                flex-flow: column;
+                align-items: center;
                 justify-content: center;
 
-                h3{
-                    text-transform: uppercase;
+                box-shadow: 2px 2px 10px 3px #000;
+                background-color: rgba(158,0,18,.9);
+                height: 30vw;
+                width: 80%;
+                margin: 20px 0;
+
+                align-self: end;
+
+                transition: all .3s ease-in-out;
+
+                &:hover{
+                    cursor: pointer;
+                    color: darken(#fff, 20%);
+                }
+
+                i{
+                    font-size: 2em;
+                }
+                .content{
+                    font-size: 1.5em;
+                    margin: 10px 0;
                 }
             }
         }
     }
 
+@media (min-width: 480px){
+    .admin-container{
+        .grid-wrapper{
+            .admin-content{
+                width: 60%;
+            }
+        }
+    }
+}
+
 @media (min-width: 768px){
     .admin-container{
-        .banner{
-            background-size: cover;
+        background-size: 200%;
+        .grid-wrapper{
+            grid-template-columns: 1fr 1fr;
+            .admin-content{
+                width: 80%;
+                height: 20vw;
+            }
         }
     }
 }
 
 @media (min-width: 1024px){
     .admin-container{
-
-        .admin-panel{
-            width: 70%;
+        background-size: cover;
+        .grid-wrapper{
+            width: 100%;
+            grid-template-columns: repeat(3, 1fr);
+            .admin-content{
+                font-size: 30px;
+                width: 90%;
+            }
         }
     }
 }
+
 </style>
