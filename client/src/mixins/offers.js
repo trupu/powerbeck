@@ -1,8 +1,24 @@
+import axios from 'axios';
+
+const url = 'http://localhost:5000/adminpanel/offers';
+
 const offersArray = [];
 
 class Offer {
     constructor(name) {
         this.name = name;
+    }
+
+    static getOffer() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await axios.get(url);
+                const { data } = res;
+                resolve(data.map(el => ({ ...el })));
+            } catch (err) {
+                reject(err);
+            }
+        });
     }
 
     setData(logo, logoHeader, description, price) {
@@ -29,4 +45,4 @@ a4.setData('3msc', 'Karnet OPEN 3-Miesięczny', '3-Miesięczny wstęp na siłown
 a5.setData('6msc', 'Karnet OPEN Półroczny', 'Półroczny wstęp na siłownię + salkę fitness + strefę cardio', 500);
 a6.setData('rok', 'Karnet OPEN Roczny', 'Roczny wstęp na siłownię + salkę fitness + strefę cardio', 900);
 
-export default { offersArray };
+export default { Offer };

@@ -7,7 +7,7 @@ class LoginService {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.post(url);
-                const data = res.data;
+                const { data } = res;
                 resolve(data.map(el => ({ ...el })));
             } catch (err) {
                 reject(err);
