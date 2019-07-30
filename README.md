@@ -8,4 +8,8 @@ cd server && npm run dev
 
 cd client && npm run serve 
 
+### Installing dependencies
+
+npm install
+
 ### Vue-Cli
