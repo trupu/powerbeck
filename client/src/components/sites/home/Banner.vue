@@ -1,5 +1,5 @@
 <template lang='pug'>
-    div.container
+    div.container#banner
         div.nav-menu_show(@mouseover='mouseOverMenu()' @click='mouseOverMenu()' ref='menuShow')
                 | Rozwiń
         nav.nav-menu(@mouseover='mouseOverMenu()' ref='menuScroller')
@@ -16,7 +16,7 @@
                 div.nav-menu_links__exit(@click='hideMenu()' ref='exitButton')
                     i(class='fas fa-times')
                 ul(class='menu-list')
-                    a(href='/')
+                    a(href='#banner')
                         li
                             | start
                     a(href='#coaches')

@@ -5,11 +5,11 @@
             button.logout(@click='logout')
                 | Wyloguj
         div.grid-wrapper(v-if='adminWrapper')
-            div.admin-content(@click='checkClicked()' data-url='coaches')
+            div.admin-content(@click='checkClicked()' data-url='coach')
                 i(class='fas fa-users')
                 p.content
                     | Trenerzy
-            div.admin-content(@click='checkClicked(), getOffer()' data-url='offers')
+            div.admin-content(@click='checkClicked(), getOffer()' data-url='offer')
                 i(class='far fa-newspaper')
                 p.content
                     | Karnety
@@ -17,28 +17,33 @@
                 i(class='fas fa-camera')
                 p.content
                     | Zdjęcia
-        div.content-container(v-if='coaches')
+        div.content-container(v-if='coach.showed')
             | TRENERZY
-        div.content-container(v-if='offers')
+        div.content-container(v-if='offer.showed')
             div.method-get(ref='offerElement')
                 h3
                     | Karnety
                 div.get-wrapper
-                    div.anim(v-if='!offerCreated')
+                    div.anim(v-if='!offer.created')
                         div.circle
                         div.circle
                         div.circle
-            div.method-post
-                button.button-small(@click='showForm("offer")')
-                    | Dodaj karnet
-            div.method-update
-                button.button-small
-                    | Modyfikuj
-        div.content-container(v-if='gallery')
+            div.methods-flex-wrapper
+                div.method-post
+                    button.button-small.tochange(@click='showForm("offer", "add")')
+                        | Dodaj karnet
+                div.method-update
+                    button.button-small.tochange(@click='showForm("offer", "modify")')
+                        | Modyfikuj
+                div.exit-text
+                    | Powrót
+        div.content-container(v-if='gallery.showed')
             | Galeria
-        div.admin-form(v-if='formShowed.offer')
+        div.admin-form(v-if='formShowed')
             div.admin-form-wrapper
-                | Drupal
+                h3.form-title
+                    | Dodaj karnet
+                div.form-content
                 i(class='fas fa-times exit-button' @click='hideForm("offer")')
 </template>
 <script>
@@ -52,17 +57,28 @@ export default {
     },
     data() {
         return {
+            timeout: '',
             adminWrapper: true,
-            coaches: false,
-            offers: false,
-            gallery: false,
+            formShowed: false,
+            formName: '',
+            formType: '',
+            offer: {
+                showed: false,
+                counter: 0,
+                created: false,
+            },
+            gallery: {
+                showed: false,
+                counter: 0,
+                created: false,
+            },
+            coach: {
+                showed: false,
+                counter: 0,
+                created: false,
+            },
             Offers,
             offerCreated: false,
-            formShowed: {
-                offer: false,
-                coaches: false,
-                gallery: false,
-            },
         };
     },
     methods: {
@@ -73,6 +89,7 @@ export default {
         checkIsLogged() {
             // checking if admin is logged in
         },
+        // creating table with data returned from database
         createContent(data, parent) {
             const table = document.createElement('table');
             const trth = document.createElement('tr');
@@ -110,26 +127,68 @@ export default {
             }
             parent.appendChild(table);
         },
+        // loading offers from database
         async getOffer() {
-            if (this.offerCreated) return;
-            const data = await this.Offers.Offer.getOffer();
+            if (this.offer.created) return;
+            const data = await this.Offers.getOffer();
             this.createContent(data, this.$refs.offerElement);
-            this.offerCreated = true;
+            this.offer.created = true;
         },
+        // checking which of divs was clicked
         checkClicked() {
             let ev = event.target;
             if (!event.target.classList.contains('admin-content')) {
                 ev = event.target.closest('.admin-content');
             }
-            this[ev.attributes['data-url'].value] = true;
+            this[ev.attributes['data-url'].value].showed = true;
             this.adminWrapper = false;
         },
-        showForm(data) {
-            this.formShowed[data] = true;
+        // hiding menu of clicked element (for instance offer)
+        hideClicked() {
+            this[ev.attributes['data-url'].value].showed = false;
+            this.adminWrapper = true;
         },
-        hideForm(data) {
-            this.formShowed[data] = false;
+        // showing add/modify form
+        showForm(name, type) {
+            this.formShowed = true;
+            this.formName = name;
+            this.formType = type;
         },
+        // hiding add/modify form
+        hideForm(name, type) {
+            this.formShowed = false;
+            this.formName = '';
+            this.formType = '';
+        },
+        // resizing buttons when user changes window width
+        buttonsClassNames() {
+            if(this.timeout) clearTimeout(this.timeout);
+            this.timeout = setTimeout(() => {
+                const check = document.querySelector('.tochange');
+                if(check){
+                    const change = document.querySelectorAll('.tochange');
+                    if(window.innerWidth > 768){
+                        if(check.classList.contains('button-small')){
+                            change.forEach(el => {
+                                el.classList.remove('button-small');
+                                el.classList.add('button-medium');
+                            });
+                        }
+                    }else{
+                        if(!check.classList.contains('button-small')){
+                            change.forEach(el => {
+                                el.classList.remove('button-medium');
+                                el.classList.add('button-small');
+                            });
+                        }
+                    }
+                }
+            }, 500);
+        },
+    },
+    created() {
+        this.buttonsClassNames();
+        window.addEventListener('resize', this.buttonsClassNames);
     },
 };
 </script>
@@ -213,10 +272,19 @@ table{
     .admin-form-wrapper{
         display: flex;
         width: 60%;
-        height: 300px;
-        background-color: rgba(0,0,0,.5);
+        height: 500px;
+        background-color: rgba(0,0,0,.8);
+        box-shadow: 0 0 5px 3px #000;
         position: relative;
         padding: 10px;
+
+        h3{
+            width: 100%;
+            text-align: center;
+            font-size: 20px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
 
         .exit-button{
             position: absolute;
@@ -339,8 +407,18 @@ table{
                 flex-flow: column;
             }
 
-            .method-post{
-                margin: 20px 0;
+            .methods-flex-wrapper{
+                display: flex;
+                flex-flow: row;
+
+                width: 100%;
+
+                justify-content: space-around;
+                align-items: center;
+
+                .method-post{
+                    margin: 20px 0;
+                }
             }
         }
     }

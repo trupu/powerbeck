@@ -28,6 +28,7 @@ export default {
   methods: {
         // DYNAMICALLY CREATING CONTENT - SLIDER
     createCoachBox(array, index) {
+        if(this.$el && array[index]){
             const main = this.$refs.coachesContent;
             const circle = this.$refs.sliderCircle;
 
@@ -79,6 +80,7 @@ export default {
             circle[index].style.backgroundColor = '#000';
             circle[index].classList.add('circle-active');
             index === circle.length ? index = 0 : index++;  // eslint-disable-line
+        }
     },
         // SLIDE ANIMATION
     slideEffect(array, index) {
