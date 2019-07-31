@@ -56,8 +56,9 @@ export default {
             contactFormName: '',
             contactFormEmail: '',
             contactFormMessage: '',
-            loginFormLogin: '',
-            loginFormPassword: '',
+            // Temporary - production
+            loginFormLogin: 'powerbeckadmin',
+            loginFormPassword: 'powerbeckadmin',
             loginStatus: '',
             loginLoading: false,
         };
