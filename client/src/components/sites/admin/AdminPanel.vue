@@ -44,7 +44,7 @@
                 h3.form-title
                     | Dodaj karnet
                 div.form-content
-                i(class='fas fa-times exit-button' @click='hideForm("offer")')
+                i(class='fas fa-times exit-button' @click='hideForm()')
 </template>
 <script>
 import Buttons from '../../pieces/Buttons.vue';
@@ -136,16 +136,16 @@ export default {
         },
         // checking which of divs was clicked
         checkClicked() {
-            let ev = event.target;
-            if (!event.target.classList.contains('admin-content')) {
-                ev = event.target.closest('.admin-content');
+            this.ev = event.target;
+            if (!this.ev.classList.contains('admin-content')) {
+                this.ev = event.target.closest('.admin-content');
             }
-            this[ev.attributes['data-url'].value].showed = true;
+            this[this.ev.attributes['data-url'].value].showed = true;
             this.adminWrapper = false;
         },
         // hiding menu of clicked element (for instance offer)
         hideClicked() {
-            this[ev.attributes['data-url'].value].showed = false;
+            this[this.ev.attributes['data-url'].value].showed = false;
             this.adminWrapper = true;
         },
         // showing add/modify form
@@ -155,33 +155,31 @@ export default {
             this.formType = type;
         },
         // hiding add/modify form
-        hideForm(name, type) {
+        hideForm() {
             this.formShowed = false;
             this.formName = '';
             this.formType = '';
         },
         // resizing buttons when user changes window width
         buttonsClassNames() {
-            if(this.timeout) clearTimeout(this.timeout);
+            if (this.timeout) clearTimeout(this.timeout);
             this.timeout = setTimeout(() => {
                 const check = document.querySelector('.tochange');
-                if(check){
+                if (check) {
                     const change = document.querySelectorAll('.tochange');
-                    if(window.innerWidth > 768){
-                        if(check.classList.contains('button-small')){
-                            change.forEach(el => {
+                    if (window.innerWidth > 768) {
+                        if (check.classList.contains('button-small')) {
+                            change.forEach((el) => {
                                 el.classList.remove('button-small');
                                 el.classList.add('button-medium');
                             });
                         }
-                    }else{
-                        if(!check.classList.contains('button-small')){
-                            change.forEach(el => {
+                    } else if (!check.classList.contains('button-small')) {
+                            change.forEach((el) => {
                                 el.classList.remove('button-medium');
                                 el.classList.add('button-small');
                             });
                         }
-                    }
                 }
             }, 500);
         },

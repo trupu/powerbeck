@@ -28,7 +28,7 @@ export default {
   methods: {
         // DYNAMICALLY CREATING CONTENT - SLIDER
     createCoachBox(array, index) {
-        if(this.$el && array[index]){
+        if (this.$el && array[index]) {
             const main = this.$refs.coachesContent;
             const circle = this.$refs.sliderCircle;
 
