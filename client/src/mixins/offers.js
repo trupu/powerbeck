@@ -2,8 +2,6 @@ import axios from 'axios';
 
 const url = 'http://localhost:5000/adminpanel/offers';
 
-const offersArray = [];
-
 class Offer {
     constructor(name) {
         this.name = name;
@@ -27,7 +25,7 @@ class Offer {
         this.description = description;
         this.price = price;
 
-        offersArray.push(this);
+        // offersArray.push(this);
     }
 }
 
@@ -45,4 +43,4 @@ a4.setData('3msc', 'Karnet OPEN 3-Miesięczny', '3-Miesięczny wstęp na siłown
 a5.setData('6msc', 'Karnet OPEN Półroczny', 'Półroczny wstęp na siłownię + salkę fitness + strefę cardio', 500);
 a6.setData('rok', 'Karnet OPEN Roczny', 'Roczny wstęp na siłownię + salkę fitness + strefę cardio', 900);
 
-export default { Offer };
+export default Offer;

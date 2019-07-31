@@ -1,22 +1,25 @@
 <template lang="pug">
-    div#offer.offer-container
-        div.offer-wrapper(v-for='values in offersArray')
-            div.offer-wrapper_header
-                div.header__logo
-                    span.logo-content.small-font
-                        | {{ values.logo }}
-                    span.logo
-                div.header__title
-                    | {{ values.logoHeader }}
-            div.offer-wrapper_content.offer-list-disactive
-                p.content
-                    | {{ values.description }}
-                h3.price
-                    | Cena: {{ values.price }}zł
+    div#offer
+        div.offer-container(v-if='loading')
+            | Drupal
+        div.offer-container(v-else)
+            div.offer-wrapper(v-for='values in offersArray')
+                div.offer-wrapper_header
+                    div.header__logo
+                        span.logo-content.small-font
+                            | {{ values.logo }}
+                        span.logo
+                    div.header__title
+                        | {{ values.name }}
+                div.offer-wrapper_content.offer-list-disactive
+                    p.content
+                        | {{ values.description }}
+                    h3.price
+                        | Cena: {{ values.price }}zł
 </template>
 <script>
 import OfferWrapper from '../../pieces/OfferWrapper.vue';
-import offersArray from '../../../mixins/offers';
+import Offer from '../../../mixins/offers';
 
 export default {
     name: 'Offer',
@@ -24,10 +27,25 @@ export default {
         OfferWrapper,
     },
     data() {
-        return offersArray;
+        return {
+            Offer,
+            offersArray: [],
+            loading: true,
+        };
+    },
+    methods: {
+       async loadOffers() {
+            this.offersArray = await this.Offer.getOffer();
+            this.loading = false;
+            setTimeout(() => {
+                OfferWrapper.methods.wrapperRandomize();
+            }, 10);
+       },
+    },
+    created() {
+        this.loadOffers();
     },
     mounted() {
-        OfferWrapper.methods.wrapperRandomize();
     },
 };
 </script>
