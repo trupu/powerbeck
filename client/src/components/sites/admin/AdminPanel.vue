@@ -36,8 +36,8 @@
                     | Modyfikuj
         div.content-container(v-if='gallery')
             | Galeria
-        div.form(v-if='formShowed.offer')
-            div.form-wrapper
+        div.admin-form(v-if='formShowed.offer')
+            div.admin-form-wrapper
                 | Drupal
                 i(class='fas fa-times exit-button' @click='hideForm("offer")')
 </template>
@@ -195,7 +195,7 @@ table{
     }
 }
 
-.form{
+.admin-form{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -210,7 +210,7 @@ table{
 
     background-color: rgba(0,0,0,.5);
 
-    .form-wrapper{
+    .admin-form-wrapper{
         display: flex;
         width: 60%;
         height: 300px;
