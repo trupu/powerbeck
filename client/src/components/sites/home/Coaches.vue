@@ -132,7 +132,7 @@ export default {
   created() {
   },
   destroyed() {
-
+      clearInterval(this.interval);
   },
 };
 </script>
