@@ -5,15 +5,15 @@
             button.logout(@click='logout')
                 | Wyloguj
         div.grid-wrapper(v-if='adminWrapper')
-            div.admin-content(@click='checkClicked()' data-url='coach')
+            div.admin-content(@click='checkClicked(), buttonsClassNames()' data-url='coach')
                 i(class='fas fa-users')
                 p.content
                     | Trenerzy
-            div.admin-content(@click='checkClicked(), getOffer()' data-url='offer')
+            div.admin-content(@click='checkClicked(), buttonsClassNames(), getOffer()' data-url='offer')
                 i(class='far fa-newspaper')
                 p.content
                     | Karnety
-            div.admin-content(@click='checkClicked()' data-url='gallery')
+            div.admin-content(@click='checkClicked(), buttonsClassNames()' data-url='gallery')
                 i(class='fas fa-camera')
                 p.content
                     | Zdjęcia
@@ -35,7 +35,7 @@
                 div.method-update
                     button.button-small.tochange(@click='showForm("offer", "modify")')
                         | Modyfikuj
-                div.exit-text
+                div.exit-text(@click='hideClicked()')
                     | Powrót
         div.content-container(v-if='gallery.showed')
             | Galeria
@@ -57,6 +57,8 @@ export default {
     },
     data() {
         return {
+            actual: '',
+            newestTable: '',
             timeout: '',
             adminWrapper: true,
             formShowed: false,
@@ -126,27 +128,30 @@ export default {
                 table.appendChild(tr);
             }
             parent.appendChild(table);
+            this.newestTable = table;
         },
         // loading offers from database
         async getOffer() {
-            if (this.offer.created) return;
+            this.offer.created = false;
             const data = await this.Offers.getOffer();
             this.createContent(data, this.$refs.offerElement);
             this.offer.created = true;
         },
         // checking which of divs was clicked
         checkClicked() {
-            this.ev = event.target;
-            if (!this.ev.classList.contains('admin-content')) {
-                this.ev = event.target.closest('.admin-content');
+            let ev = event.target;
+            if (!ev.classList.contains('admin-content')) {
+                ev = ev.closest('.admin-content');
             }
-            this[this.ev.attributes['data-url'].value].showed = true;
+            this.actual = ev.attributes['data-url'].value;
+            this[this.actual].showed = true;
             this.adminWrapper = false;
         },
         // hiding menu of clicked element (for instance offer)
         hideClicked() {
-            this[this.ev.attributes['data-url'].value].showed = false;
+            this[this.actual].showed = false;
             this.adminWrapper = true;
+            this.newestTable.remove();
         },
         // showing add/modify form
         showForm(name, type) {
@@ -174,18 +179,19 @@ export default {
                                 el.classList.add('button-medium');
                             });
                         }
-                    } else if (!check.classList.contains('button-small')) {
-                            change.forEach((el) => {
-                                el.classList.remove('button-medium');
-                                el.classList.add('button-small');
+                    } else { // eslint-disable-next-line
+                        if (!check.classList.contains('button-small')) {
+                                change.forEach((el) => {
+                                    el.classList.remove('button-medium');
+                                    el.classList.add('button-small');
                             });
                         }
+                    }
                 }
             }, 500);
         },
     },
     created() {
-        this.buttonsClassNames();
         window.addEventListener('resize', this.buttonsClassNames);
     },
 };
