@@ -5,82 +5,48 @@
             button.logout(@click='logout')
                 | Wyloguj
         div.grid-wrapper(v-if='adminWrapper')
-            div.admin-content(@click='checkClicked(), buttonsClassNames()' data-url='coach')
-                i(class='fas fa-users')
+            div.admin-content(v-for='value in divs' @click='checkClicked(), buttonsClassNames()' :data-url='value.name')
+                i(:class='value.icon')
                 p.content
-                    | Trenerzy
-            div.admin-content(@click='checkClicked(), buttonsClassNames(), getOffer()' data-url='offer')
-                i(class='far fa-newspaper')
-                p.content
-                    | Karnety
-            div.admin-content(@click='checkClicked(), buttonsClassNames()' data-url='gallery')
-                i(class='fas fa-camera')
-                p.content
-                    | Zdjęcia
-        div.content-container(v-if='coach.showed')
-            | TRENERZY
-        div.content-container(v-if='offer.showed')
-            div.method-get(ref='offerElement')
-                h3
-                    | Karnety
-                div.get-wrapper
-                    div.anim(v-if='!offer.created')
-                        div.circle
-                        div.circle
-                        div.circle
-            div.methods-flex-wrapper
-                div.method-post
-                    button.button-small.tochange(@click='showForm("offer", "add")')
-                        | Dodaj karnet
-                div.method-update
-                    button.button-small.tochange(@click='showForm("offer", "modify")')
-                        | Modyfikuj
-                div.exit-text(@click='hideClicked()')
-                    | Powrót
-        div.content-container(v-if='gallery.showed')
-            | Galeria
-        div.admin-form(v-if='formShowed')
-            div.admin-form-wrapper
-                h3.form-title
-                    | Dodaj karnet
-                div.form-content
-                i(class='fas fa-times exit-button' @click='hideForm()')
+                    | {{ value.translated  }}
+        div.content-container(v-if='!adminWrapper')
+            <SiteContentChanger :data-clicked='clickedContainer'/>
 </template>
 <script>
 import Buttons from '../../pieces/Buttons.vue';
-import Offers from '../../../mixins/offers';
+import SiteContentChanger from './SiteContentChanger.vue';
 
 export default {
     name: 'AdminPanel',
     components: {
         Buttons,
+        SiteContentChanger,
     },
     data() {
         return {
-            actual: '',
-            newestTable: '',
-            timeout: '',
             adminWrapper: true,
-            formShowed: false,
-            formName: '',
-            formType: '',
-            offer: {
-                showed: false,
-                counter: 0,
-                created: false,
+            clickedContainer: '',
+            clickedTranslated: '',
+            divs: {
+                coach: {
+                    name: 'coach',
+                    translated: 'Trenerzy',
+                    icon: 'fas fa-users',
+                    formTitle: 'Trenera',
+                },
+                offer: {
+                    name: 'offer',
+                    translated: 'Oferta',
+                    icon: 'far fa-newspaper',
+                    formTitle: 'Ofertę',
+                },
+                gallery: {
+                    name: 'gallery',
+                    translated: 'Galeria',
+                    icon: 'fas fa-camera',
+                    formTitle: 'Zdjęcie',
+                },
             },
-            gallery: {
-                showed: false,
-                counter: 0,
-                created: false,
-            },
-            coach: {
-                showed: false,
-                counter: 0,
-                created: false,
-            },
-            Offers,
-            offerCreated: false,
         };
     },
     methods: {
@@ -91,79 +57,15 @@ export default {
         checkIsLogged() {
             // checking if admin is logged in
         },
-        // creating table with data returned from database
-        createContent(data, parent) {
-            const table = document.createElement('table');
-            const trth = document.createElement('tr');
-            // eslint-disable-next-line
-            for (const key in data[0]) {
-                // eslint-disable-next-line
-                if (key !== '_id') {
-                    const th = document.createElement('th');
-                    th.innerHTML = key;
-                    trth.appendChild(th);
-                }
-            }
-            table.appendChild(trth);
-            // eslint-disable-next-line
-            for (const key in data) {
-                const tr = document.createElement('tr');
-                // eslint-disable-next-line
-                for (const i in data[key]) {
-                    // eslint-disable-next-line
-                    if (data[key][i] !== data[key]._id) {
-                        const td = document.createElement('td');
-                        td.innerHTML = data[key][i];
-                        tr.appendChild(td);
-                    }
-                }
-                const td = document.createElement('td');
-                const button = document.createElement('button');
-                // eslint-disable-next-line
-                button.setAttribute('data-id', data[key]._id);
-                button.classList.add('button-small');
-                button.innerHTML = 'Usuń';
-                td.appendChild(button);
-                tr.appendChild(td);
-                table.appendChild(tr);
-            }
-            parent.appendChild(table);
-            this.newestTable = table;
-        },
-        // loading offers from database
-        async getOffer() {
-            this.offer.created = false;
-            const data = await this.Offers.getOffer();
-            this.createContent(data, this.$refs.offerElement);
-            this.offer.created = true;
-        },
         // checking which of divs was clicked
         checkClicked() {
             let ev = event.target;
             if (!ev.classList.contains('admin-content')) {
                 ev = ev.closest('.admin-content');
             }
-            this.actual = ev.attributes['data-url'].value;
-            this[this.actual].showed = true;
             this.adminWrapper = false;
-        },
-        // hiding menu of clicked element (for instance offer)
-        hideClicked() {
-            this[this.actual].showed = false;
-            this.adminWrapper = true;
-            this.newestTable.remove();
-        },
-        // showing add/modify form
-        showForm(name, type) {
-            this.formShowed = true;
-            this.formName = name;
-            this.formType = type;
-        },
-        // hiding add/modify form
-        hideForm() {
-            this.formShowed = false;
-            this.formName = '';
-            this.formType = '';
+            this.clickedContainer = ev.attributes['data-url'].value;
+            this.clickedTranslated = this.divs[this.clickedContainer].translated;
         },
         // resizing buttons when user changes window width
         buttonsClassNames() {
@@ -200,117 +102,12 @@ export default {
 
 $default_site_color: #9E0012;
 
-@keyframes circle-anim{
-    0%{
-        transform: scale(0);
-        opacity: 0;
-    }
-    50%{
-        transform: scale(1);
-        opacity: 1;
-    }
-    100%{
-        transform: scale(0);
-        opacity: 0;
-    }
-}
-
-.anim{
-    display: flex;
-    flex-flow: row;
-    margin: 20px 0;
-
-    .circle{
-        width: 15px;
-        height: 15px;
-        border-radius: 50%;
-        background-color: $default_site_color;
-        margin: 0 5px;
-        animation: circle-anim 1s both infinite ease-in-out;
-    }
-
-    @for $i from 1 to 4{
-        .circle:nth-child(#{$i}){
-            animation-delay: (10s*$i)/100;
-        }
-    }
-}
-
-table{
-    padding: 5px;
-    font-size: 18px;
-    width: 100%;
-    height: auto;
-    border-collapse: collapse;
-
-    th{
-        font-size: .8em;
-        padding: 5px;
-    }
-
-    td{
-        padding: 5px;
-        font-size: .6em;
-
-        button{
-            font-size: 1em;
-        }
-    }
-}
-
-.admin-form{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: 100vw;
-    height: 100vh;
-
-    color: #fff;
-    position: fixed;
-    top: 0;
-    left: 0;
-
-    background-color: rgba(0,0,0,.5);
-
-    .admin-form-wrapper{
-        display: flex;
-        width: 60%;
-        height: 500px;
-        background-color: rgba(0,0,0,.8);
-        box-shadow: 0 0 5px 3px #000;
-        position: relative;
-        padding: 10px;
-
-        h3{
-            width: 100%;
-            text-align: center;
-            font-size: 20px;
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-
-        .exit-button{
-            position: absolute;
-            top: 15px;
-            right: 15px;
-
-            transition: all .3s ease-in-out;
-
-            &:hover{
-                cursor: pointer;
-                color: $default_site_color;
-            }
-        }
-    }
-}
-
     .admin-container{
         display: flex;
         flex-flow: column;
         justify-content: center;
         align-items: center;
-        width: 100vw;
+        width: 100%;
         min-height: 100vh;
 
         background-image: url('../../../assets/banner_bg.jpg');
@@ -395,6 +192,7 @@ table{
         .content-container{
             display: flex;
             flex-flow: column;
+            position: relative;
 
             color: #fff;
             background-color: rgba(0,0,0,.8);
@@ -402,26 +200,17 @@ table{
             min-height: 300px;
             padding: 15px 10px;
 
-            h3{
-                margin: 0;
-            }
+            .exit-button{
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                font-size: 1.5em;
 
-            .get-wrapper{
-                display: flex;
-                flex-flow: column;
-            }
+                transition: all .3s ease-in-out;
 
-            .methods-flex-wrapper{
-                display: flex;
-                flex-flow: row;
-
-                width: 100%;
-
-                justify-content: space-around;
-                align-items: center;
-
-                .method-post{
-                    margin: 20px 0;
+                &:hover{
+                    cursor: pointer;
+                    color: $default_site_color;
                 }
             }
         }

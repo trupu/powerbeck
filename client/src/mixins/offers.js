@@ -7,7 +7,7 @@ class Offer {
         this.name = name;
     }
 
-    static getOffer() {
+    static getData() {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.get(url);
