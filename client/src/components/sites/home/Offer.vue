@@ -35,7 +35,7 @@ export default {
     },
     methods: {
        async loadOffers() {
-            this.offersArray = await this.Offer.getOffer();
+            this.offersArray = await this.Offer.getData();
             this.loading = false;
             setTimeout(() => {
                 OfferWrapper.methods.wrapperRandomize();
