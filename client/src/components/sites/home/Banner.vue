@@ -125,11 +125,12 @@ export default {
     mouseLeaveMenu() {
         const menu = this.$refs.menuScroller;
         const { menuShow } = this.$refs;
-
-        if (!menu.classList.contains('menu-active')) {
-            menu.style.transform = 'translateY(-50px)';
-            menuShow.style.opacity = '1';
-            menuShow.style.transform = 'translateY(0px)';
+        if (menu) {
+            if (!menu.classList.contains('menu-active')) {
+                menu.style.transform = 'translateY(-50px)';
+                menuShow.style.opacity = '1';
+                menuShow.style.transform = 'translateY(0px)';
+            }
         }
     },
     // nav-menu showing/hiding onScroll
@@ -156,6 +157,7 @@ export default {
   },
   destroyed() {
     window.removeEventListener('scroll', this.scrollMenu);
+    this.bannerTimeout = false;
   },
   mounted() {
   },
