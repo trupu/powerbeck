@@ -1,6 +1,6 @@
 <template lang="pug">
     div
-        div.method-get(ref='getElement')
+        div.method-get(ref='getElement' :data-name='this.$parent.clickedContainer')
             h3
                 | {{ this.$parent.clickedTranslated }}
             div.get-wrapper(ref='getParent')
@@ -17,6 +17,22 @@
                     | Modyfikuj
             div.exit-text(@click='hideComponent()')
                 | Powrót
+        div.alert-container(v-if='deleting')
+            div.alert
+                p.message
+                    | Czy na pewno chcesz usunąć "{{ deleting }}"?
+                div.buttons
+                    button.action-button.action-yes.button-medium(@click='action' data-action='yes')
+                        | Tak
+                    button.action-button.button-medium-reverse(@click='action' data-action='no')
+                        | Nie
+                p.message-little
+                    | Uwaga operacja jest nieodwracalna!
+                div.anim-flexbox
+                    div.anim(v-if='sending')
+                                div.circle
+                                div.circle
+                                div.circle
         div.admin-form(v-if='formShowed')
             div.admin-form-wrapper
                 h3.form-title
@@ -24,14 +40,18 @@
                 div.form-content
                     label(v-for='(key, el) in returnedData[0]' v-if='el !== "_id"')
                         | {{ el }}:
-                        input(type='text' :name='el' :placeholder='key' class='form-input')
+                        input(type='text' :name='el' :placeholder='key' class='form-input' autocomplete='off')
                 div.send
                     button.button-medium(@click='validateForm($parent.clickedContainer, formType)')
                         | Wyślij
-                p.error-handler
-                    | {{ errorMessage }}
-                p.ok-handler
-                    | {{ statusMessage }}
+                div.anim-flexbox
+                    div.anim(v-if='sending')
+                        div.circle
+                        div.circle
+                        div.circle
+                div.error-flexbox
+                    p.error-handler(v-if='statusMessage' :class='colorHandler')
+                        | {{ statusMessage }}
                 i(class='fas fa-times exit-button' @click='hideForm()')
 </template>
 <script>
@@ -41,10 +61,14 @@ export default {
     name: 'SiteContentChanger',
     data() {
         return {
+            buttonSize: 'button-small',
+            buttonSizeReverse: 'button-small-reverse',
+            deleting: '',
+            colorHandler: '',
+            sending: false,
             formType: '',
             formTitle: '',
             statusMessage: '',
-            errorMessage: '',
             returnedData: '',
             created: false,
             newestTable: '',
@@ -83,9 +107,11 @@ export default {
                 const button = document.createElement('button');
                 // eslint-disable-next-line
                 button.setAttribute('data-id', data[key]._id);
+                button.setAttribute('data-parent-name', parent.attributes['data-name'].value);
+                button.setAttribute('data-name', data[key].name);
                 button.classList.add('button-small');
                 button.innerHTML = 'Usuń';
-                button.addEventListener('click', this.deleteData);
+                button.addEventListener('click', this.firstlyDelete);
                 td.appendChild(button);
                 tr.appendChild(td);
                 table.appendChild(tr);
@@ -102,27 +128,66 @@ export default {
             }
             this.created = false;
             const data = await this[name].getData();
+            // eslint-disable-next-line
+            data.map(el => delete el['__v']);
             this.createContent(data, this.$refs.getElement);
             this.returnedData = data;
             this.created = true;
         },
         // sending data to database
-        async postData(name) {
+        async postData(name, data) {
+            this.sending = true;
+            const send = await this[name].postData(data);
+            this.sending = false;
+            if (send.status === false) {
+                this.colorHandler = 'red';
+                this.statusMessage = send.message;
+                return;
+            }
             this.created = false;
-            // const send = await this[name].postData();
             if (this.newestTable) this.newestTable.remove();
             await this.getData(this.$parent.clickedContainer);
             this.created = true;
+            this.colorHandler = 'green';
             this.statusMessage = 'Wartość dodana pomyślnie! (just feedback // backend POST method temporary not available)';
         },
         // modyfing data from database
-        async modifyData(name) {
+        async modifyData(name, data) {
             alert(name);
         },
-        // deleting data
-        async deleteData() {
+        // alert "are you sure that you want to delete content?"
+        firstlyDelete() {
             const id = event.target.attributes['data-id'].value;
-            alert(`ID potrzebne do usunięcia z bazy: ${id}`);
+            const name = event.target.attributes['data-parent-name'].value;
+            this.deleting = event.target.attributes['data-name'].value;
+            setTimeout(() => {
+                const button = document.querySelector('.action-yes');
+                button.setAttribute('data-id', id);
+                button.setAttribute('data-name', name);
+            }, 10);
+        },
+        // deleting data
+        async deleteData(id, name) {
+            this.sending = true;
+            await this[name].deleteData(id);
+            this.sending = false;
+            this.created = false;
+            if (this.newestTable) this.newestTable.remove();
+            await this.getData(this.$parent.clickedContainer);
+            this.created = true;
+            this.deleting = '';
+        },
+        action() {
+            const ev = event.target;
+            // eslint-disable-next-line
+            if(ev.attributes['data-action'].value !== 'yes') {
+                this.deleting = '';
+                return;
+            }
+            const id = event.target.attributes['data-id'].value;
+            const name = event.target.attributes['data-name'].value;
+
+            this.deleteData(id, name);
         },
         // hiding this component
         hideComponent() {
@@ -151,18 +216,37 @@ export default {
             const err = inputsArray.find(el => el.value === '');
 
             if (err) {
-                this.errorMessage = 'Proszę wypełnić wszystkie pola!';
+                this.colorHandler = 'red';
+                this.statusMessage = 'Proszę wypełnić wszystkie pola!';
                 return;
             }
             this.errorMessage = '';
+            const arrayValues = {};
             // eslint-disable-next-line
-            method === 'add' ? this.postData(this.$parent.clickedContainer) : this.modifyData(this.$parent.clickedContainer);
+            inputsArray.forEach(el => arrayValues[el.attributes.name.value] = el.value);
+
+            // eslint-disable-next-line
+            method === 'add' ? this.postData(this.$parent.clickedContainer, arrayValues) : this.modifyData(this.$parent.clickedContainer, arrayValues);
+        },
+        // regulating buttons size
+        buttonSizeChanger() {
+            setTimeout(() => {
+                if (window.innerWidth > 768) {
+                    this.buttonSize = 'button-small';
+                    this.buttonSizeReverse = 'button-small-reverse';
+                } else {
+                    this.buttonSize = 'button-medium';
+                    this.buttonSizeReverse = 'button-medium-reverse';
+                }
+            }, 500);
         },
     },
     created() {
     },
     mounted() {
+        this.buttonSizeChanger();
         this.getData(this.$parent.clickedContainer);
+        window.addEventListener('resize', this.buttonSizeChanger);
     },
 };
 </script>
@@ -184,6 +268,63 @@ $default_site_color: #9E0012;
         transform: scale(0);
         opacity: 0;
     }
+}
+
+.alert-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,.5);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .alert{
+        display: flex;
+        flex-flow: column;
+        background-color: rgba(0,0,0,.8);
+        box-shadow: 0 0 5px 3px #000;
+        width: 60%;
+        min-height: 400px;
+
+        align-items: center;
+        justify-content: center;
+
+        .message{
+            font-size: 1.5em;
+            color: #fff;
+            text-align: center;
+        }
+        .message-little{
+            font-size: 1em;
+            color: red;
+        }
+        .buttons{
+            display: flex;
+            flex-flow: row;
+
+            button{
+                margin: 10px 20px;
+            }
+        }
+    }
+}
+
+.error-flexbox{
+    width: 100%;
+    min-height: 50px;
+}
+
+.anim-flexbox{
+    display: flex;
+    width: 100%;
+    height: 50px;
+
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .anim{
@@ -324,15 +465,15 @@ table{
 
             width: 100%;
         }
-        .error-handler, .ok-handler{
+        .error-handler{
             width: 100%;
             text-align: center;
             font-size: 1em;
         }
-        .error-handler{
+        .red{
             color: red;
         }
-        .ok-handler{
+        .green{
             color: green;
         }
     }
@@ -399,6 +540,12 @@ table{
             width: 80%;
         }
     }
+
+    .alert-container{
+        .alert{
+            width: 80%;
+        }
+    }
 }
 
 @media (max-width: 480px){
@@ -410,6 +557,17 @@ table{
                     input{
                         width: 150px;
                     }
+                }
+            }
+        }
+    }
+    .alert-container{
+        .alert{
+            width: 100%;
+            .buttons{
+                flex-flow: column;
+                button{
+                    margin: 20px 0;
                 }
             }
         }

@@ -3,44 +3,57 @@ import axios from 'axios';
 const url = 'http://localhost:5000/adminpanel/offers';
 
 class Offer {
-    constructor(name) {
-        this.name = name;
-    }
-
     static getData() {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.get(url);
                 const { data } = res;
-                resolve(data.map(el => ({ ...el })));
+                resolve(data.data);
             } catch (err) {
                 reject(err);
             }
         });
     }
 
-    setData(logo, logoHeader, description, price) {
-        this.logo = logo;
-        this.logoHeader = logoHeader;
-        this.description = description;
-        this.price = price;
+    static postData(data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const validation = this.validate(data);
+                if (validation !== 'ok') {
+                    const status = false;
+                    const message = validation;
+                    resolve({ status, message });
+                } else {
+                    const res = await axios.post(url, data);
+                    resolve(res);
+                }
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
 
-        // offersArray.push(this);
+    static deleteData(id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const res = await axios.delete(`${url}/${id}`);
+                resolve(res);
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+    static validate(data) {
+        const logomax = 4;
+        const namemax = 40;
+        const descmax = 100;
+        if (data.logo.length > logomax) return `Logo ma więcej niż ${logomax} znaków!`;
+        if (data.name.length > namemax) return `Nazwa ma więcej niż ${namemax} znaków!`;
+        if (data.description.length > descmax) return `Opis ma więcej niż ${descmax} znaków!`;
+        if (isNaN(data.price)) return `Cena: '${data.price}' nie jest liczbą!`;
+        return 'ok';
     }
 }
-
-const a1 = new Offer('jednorazowe');
-const a2 = new Offer('wejscia');
-const a3 = new Offer('miesieczny');
-const a4 = new Offer('3miesieczny');
-const a5 = new Offer('polroczny');
-const a6 = new Offer('roczny');
-
-a1.setData('1', 'Jednorazowe Wejście', 'Jednorazowe wejście na siłowinię', 20);
-a2.setData('10', 'Karnet 10 wejść', '10 wejść w ciągu miesiąca', 80);
-a3.setData('1msc', 'Karnet OPEN Miesięczny', 'Miesięczny wstęp na siłownię + salkę fitness + strefę cardio', 120);
-a4.setData('3msc', 'Karnet OPEN 3-Miesięczny', '3-Miesięczny wstęp na siłownię + salkę fitness + strefę cardio', 300);
-a5.setData('6msc', 'Karnet OPEN Półroczny', 'Półroczny wstęp na siłownię + salkę fitness + strefę cardio', 500);
-a6.setData('rok', 'Karnet OPEN Roczny', 'Roczny wstęp na siłownię + salkę fitness + strefę cardio', 900);
 
 export default Offer;

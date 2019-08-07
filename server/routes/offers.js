@@ -1,32 +1,25 @@
 const express = require('express');
 const mongodb = require('mongodb');
-
-const mongoUrl = 'mongodb+srv://admin:adminzsp5@powerbeck-rpnty.mongodb.net/test?retryWrites=true&w=majority';
+const mongoUrl = require('../config/database');
+const offersController = require('../controllers/offersController');
+const errors = require('../middlewares/errors');
 
 const offers = express.Router();
 
-var client;
-
 // GET
 
-offers.get('/', async (req, res) => {
-    const data = await loadData();
-    res.send( await data.find({}).toArray());
-    client.close();
-});
+offers.get('/', errors.catchAsync(offersController.findAll));
 
 // POST
 
+offers.post('/', errors.catchAsync(offersController.create));
 
+// UPDATE
 
-// METHODS
+offers.put('/:id', errors.catchAsync(offersController.update));
 
-async function loadData() {
-    client = await mongodb.MongoClient.connect(
-        mongoUrl, {
-            useNewUrlParser : true
-        });
-    return client.db('powerbeck').collection('offers_data');
-}
+// DELETE
+
+offers.delete('/:id', errors.catchAsync(offersController.remove));
 
 module.exports = offers;

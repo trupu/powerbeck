@@ -1,8 +1,6 @@
 const express = require('express');
 const mongodb = require('mongodb');
-
-const mongoUrl = 'mongodb+srv://admin:adminzsp5@powerbeck-rpnty.mongodb.net/test?retryWrites=true&w=majority';
-
+const mongoUrl = require('../config/database');
 
 const login = express.Router();
 
