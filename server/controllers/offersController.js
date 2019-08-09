@@ -21,7 +21,10 @@ module.exports = {
         const offer = await Offer.findOne({ '_id': req.params.id });
         if(!offer) return next();
 
-        offer.logo = req.body.logo;
+        if (req.body.logo) offer.logo = req.body.logo;
+        if (req.body.name) offer.name = req.body.name;
+        if (req.body.description) offer.description = req.body.description;
+        if (req.body.price) offer.price = req.body.price;
 
         await offer.save();
 

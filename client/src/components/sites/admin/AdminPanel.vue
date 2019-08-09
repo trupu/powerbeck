@@ -107,7 +107,7 @@ $default_site_color: #9E0012;
         flex-flow: column;
         justify-content: center;
         align-items: center;
-        width: 100%;
+        width: 100vw;
         min-height: 100vh;
 
         background-image: url('../../../assets/banner_bg.jpg');

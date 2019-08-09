@@ -10,11 +10,8 @@
                     div.circle
         div.methods-flex-wrapper
             div.method-post
-                button.button-small.tochange(@click='showForm("add")')
+                button(@click='showForm("add")' :class='buttonSize')
                     | Dodaj {{ this.$parent.divs[this.$parent.clickedContainer].formTitle }}
-            div.method-update
-                button.button-small.tochange(@click='showForm("modify")')
-                    | Modyfikuj
             div.exit-text(@click='hideComponent()')
                 | Powrót
         div.alert-container(v-if='deleting')
@@ -38,7 +35,7 @@
                 h3.form-title
                     | {{this.formTitle}} {{this.$parent.divs[this.$parent.clickedContainer].formTitle}}
                 div.form-content
-                    label(v-for='(key, el) in returnedData[0]' v-if='el !== "_id"')
+                    label(v-for='(key, el) in returnedData[this.rowCounter]' v-if='el !== "_id"')
                         | {{ el }}:
                         input(type='text' :name='el' :placeholder='key' class='form-input' autocomplete='off')
                 div.send
@@ -63,6 +60,10 @@ export default {
         return {
             buttonSize: 'button-small',
             buttonSizeReverse: 'button-small-reverse',
+            buttonSizeSmaller: 'button-small',
+            buttonSizeSmallerReverse: 'button-small-reverse',
+            idHolder: '',
+            rowCounter: 0,
             deleting: '',
             colorHandler: '',
             sending: false,
@@ -81,6 +82,7 @@ export default {
         createContent(data, parent) {
             const table = document.createElement('table');
             const trth = document.createElement('tr');
+            let rows = -1;
             // eslint-disable-next-line
             for (const key in data[0]) {
                 // eslint-disable-next-line
@@ -94,6 +96,7 @@ export default {
             // eslint-disable-next-line
             for (const key in data) {
                 const tr = document.createElement('tr');
+                rows++;
                 // eslint-disable-next-line
                 for (const i in data[key]) {
                     // eslint-disable-next-line
@@ -105,14 +108,26 @@ export default {
                 }
                 const td = document.createElement('td');
                 const button = document.createElement('button');
+                const button2 = document.createElement('button');
                 // eslint-disable-next-line
                 button.setAttribute('data-id', data[key]._id);
-                button.setAttribute('data-parent-name', parent.attributes['data-name'].value);
-                button.setAttribute('data-name', data[key].name);
-                button.classList.add('button-small');
-                button.innerHTML = 'Usuń';
-                button.addEventListener('click', this.firstlyDelete);
+                button.setAttribute('data-row', rows);
+                button.classList.add('tochange2');
+                button.classList.add(this.buttonSizeSmaller);
+                button.innerHTML = 'Modyfikuj';
+                button.addEventListener('click', this.showForm);
+                // eslint-disable-next-line
+                button2.setAttribute('data-id', data[key]._id);
+                button2.classList.add('tochangeR2');
+                button2.classList.add(this.buttonSizeSmallerReverse);
+                button2.setAttribute('data-parent-name', parent.attributes['data-name'].value);
+                button2.setAttribute('data-name', data[key].name);
+                button2.innerHTML = 'Usuń';
+                button2.addEventListener('click', this.firstlyDelete);
+
+                td.classList.add('table-buttons-flex');
                 td.appendChild(button);
+                td.appendChild(button2);
                 tr.appendChild(td);
                 table.appendChild(tr);
             }
@@ -149,11 +164,29 @@ export default {
             await this.getData(this.$parent.clickedContainer);
             this.created = true;
             this.colorHandler = 'green';
-            this.statusMessage = 'Wartość dodana pomyślnie! (just feedback // backend POST method temporary not available)';
+            this.statusMessage = 'Wartość dodana pomyślnie!';
         },
         // modyfing data from database
-        async modifyData(name, data) {
-            alert(name);
+        async modifyData(name, data, id) {
+            this.sending = true;
+            const datanew = {};
+            // eslint-disable-next-line
+            for (const value in data) {
+                if (data[value] !== '') datanew[value] = data[value];
+            }
+            const send = await this[name].updateData(id, datanew);
+            this.sending = false;
+            if (send.status === false) {
+                this.colorHandler = 'red';
+                this.statusMessage = send.message;
+                return;
+            }
+            this.created = false;
+            if (this.newestTable) this.newestTable.remove();
+            await this.getData(this.$parent.clickedContainer);
+            this.created = true;
+            this.colorHandler = 'green';
+            this.statusMessage = 'Wartość zmieniona pomyślnie!';
         },
         // alert "are you sure that you want to delete content?"
         firstlyDelete() {
@@ -198,11 +231,15 @@ export default {
         showForm(type) {
             // eslint-disable-next-line
             type === 'add' ? this.formTitle = 'Dodaj' : this.formTitle = 'Modyfikuj';
-            this.formType = type;
+            // eslint-disable-next-line
+            type ? this.formType = type : this.formType = 'modify';
+            if (event.target.attributes['data-row']) this.rowCounter = event.target.attributes['data-row'].value;
+            if (event.target.attributes['data-id']) this.idHolder = event.target.attributes['data-id'].value;
             this.formShowed = true;
         },
         // hiding add/modify form
         hideForm() {
+            this.rowCounter = 0;
             this.formShowed = false;
         },
         validateForm(name, method) {
@@ -215,28 +252,63 @@ export default {
 
             const err = inputsArray.find(el => el.value === '');
 
-            if (err) {
+            if (err && method === 'add') {
                 this.colorHandler = 'red';
                 this.statusMessage = 'Proszę wypełnić wszystkie pola!';
                 return;
             }
+            let counter = 0;
+            inputsArray.forEach((el) => {
+                if (el.value === '') {
+                    counter++;
+                }
+            });
+            if (counter === inputsArray.length) {
+                this.colorHandler = 'red';
+                this.statusMessage = 'Proszę wypełnić przynajmniej jedno pole!';
+                return;
+            }
+
+            this.statusMessage = '';
             this.errorMessage = '';
             const arrayValues = {};
             // eslint-disable-next-line
             inputsArray.forEach(el => arrayValues[el.attributes.name.value] = el.value);
 
             // eslint-disable-next-line
-            method === 'add' ? this.postData(this.$parent.clickedContainer, arrayValues) : this.modifyData(this.$parent.clickedContainer, arrayValues);
+            method === 'add' ? this.postData(this.$parent.clickedContainer, arrayValues) : this.modifyData(this.$parent.clickedContainer, arrayValues, this.idHolder);
         },
         // regulating buttons size
         buttonSizeChanger() {
             setTimeout(() => {
-                if (window.innerWidth > 768) {
+                const tiny = document.querySelectorAll('.tochange2');
+                const tinyR = document.querySelectorAll('.tochangeR2');
+                if (window.innerWidth < 768) {
                     this.buttonSize = 'button-small';
                     this.buttonSizeReverse = 'button-small-reverse';
+                    this.buttonSizeSmaller = 'button-tiny';
+                    this.buttonSizeSmallerReverse = 'button-tiny-reverse';
+                    tiny.forEach((el) => {
+                        el.classList.remove('button-small');
+                        el.classList.add('button-tiny');
+                    });
+                    tinyR.forEach((el) => {
+                        el.classList.remove('button-small-reverse');
+                        el.classList.add('button-tiny-reverse');
+                    });
                 } else {
                     this.buttonSize = 'button-medium';
                     this.buttonSizeReverse = 'button-medium-reverse';
+                    this.buttonSizeSmaller = 'button-small';
+                    this.buttonSizeSmallerReverse = 'button-small-reverse';
+                    tiny.forEach((el) => {
+                        el.classList.remove('button-tiny');
+                        el.classList.add('button-small');
+                    });
+                    tinyR.forEach((el) => {
+                        el.classList.remove('button-tiny-reverse');
+                        el.classList.add('button-small-reverse');
+                    });
                 }
             }, 500);
         },
@@ -366,7 +438,13 @@ table{
 
         button{
             font-size: 1em;
+            margin: 3px;
         }
+    }
+
+    .table-buttons-flex{
+        display: flex;
+        flex-flow: column;
     }
 }
 
@@ -521,6 +599,18 @@ table{
             &:hover{
                 cursor: pointer;
                 color: $default_site_color;
+            }
+        }
+    }
+}
+
+@media (min-width: 480px) {
+    table{
+        .table-buttons-flex{
+            flex-flow: row;
+            button{
+                margin: 0 5px;
+                font-size: .9em;
             }
         }
     }

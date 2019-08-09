@@ -33,6 +33,24 @@ class Offer {
         });
     }
 
+    static updateData(id, data) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const validation = this.validate(data);
+                if (validation !== 'ok') {
+                    const status = false;
+                    const message = validation;
+                    resolve({ status, message });
+                } else {
+                    const res = await axios.put(`${url}/${id}`, data);
+                    resolve(res);
+                }
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
     static deleteData(id) {
         return new Promise(async (resolve, reject) => {
             try {
@@ -48,11 +66,22 @@ class Offer {
         const logomax = 4;
         const namemax = 40;
         const descmax = 100;
-        if (data.logo.length > logomax) return `Logo ma więcej niż ${logomax} znaków!`;
-        if (data.name.length > namemax) return `Nazwa ma więcej niż ${namemax} znaków!`;
-        if (data.description.length > descmax) return `Opis ma więcej niż ${descmax} znaków!`;
-        if (isNaN(data.price)) return `Cena: '${data.price}' nie jest liczbą!`;
-        return 'ok';
+        if (data) {
+            if (data.logo) {
+                if (data.logo.length > logomax) return `Logo ma więcej niż ${logomax} znaków!`;
+            }
+            if (data.name) {
+                if (data.name.length > namemax) return `Nazwa ma więcej niż ${namemax} znaków!`;
+            }
+            if (data.description) {
+                if (data.description.length > descmax) return `Opis ma więcej niż ${descmax} znaków!`;
+            }
+            if (data.price) {
+                if (isNaN(data.price)) return `Cena: '${data.price}' nie jest liczbą!`;
+            }
+            return 'ok';
+        }
+        return false;
     }
 }
 
