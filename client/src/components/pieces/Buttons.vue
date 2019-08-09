@@ -11,7 +11,7 @@ export default {
 
     $default_site_color: #9E0012;
 
-    .button-medium, .button-medium-reverse, .button-small, .button-small-reverse{
+    .button-medium, .button-medium-reverse, .button-small, .button-small-reverse, .button-tiny, .button-tiny-reverse{
         text-shadow: 2px 2px 8px #000;
         transition: all .3s ease-in-out;
 
@@ -20,7 +20,7 @@ export default {
         }
     }
 
-    .button-medium, .button-small{
+    .button-medium, .button-small, .button-tiny{
         background-color: $default_site_color;
         border: 1px solid $default_site_color;
         color: #fff;
@@ -31,7 +31,7 @@ export default {
         }
     }
 
-    .button-medium-reverse, .button-small-reverse{
+    .button-medium-reverse, .button-small-reverse, .button-tiny-reverse{
         background: none;
         border: 1px solid $default_site_color;
         color: $default_site_color;
@@ -40,6 +40,13 @@ export default {
             background: $default_site_color;
             color: #fff;
         }
+    }
+
+    .button-tiny, .button-tiny-reverse{
+        width: 60px;
+        height: 20px;
+        font-size: .7em;
+        font-weight: 700;
     }
 
     .button-small, .button-small-reverse{
