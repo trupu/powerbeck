@@ -1,6 +1,4 @@
 const express = require('express');
-const mongodb = require('mongodb');
-const mongoUrl = require('../config/database');
 const offersController = require('../controllers/offersController');
 const errors = require('../middlewares/errors');
 

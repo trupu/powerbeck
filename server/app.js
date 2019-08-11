@@ -13,6 +13,7 @@ const mongoose = require('mongoose');
 
 const login = require('./routes/login');
 const offers = require('./routes/offers');
+const coaches = require('./routes/coaches');
 
 mongoose.connect(dbConfig, {
     useNewUrlParser: true,
@@ -38,6 +39,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use('/login', login);
 app.use('/adminpanel/offers', offers);
+app.use('/adminpanel/coaches', coaches);
 
 // error handlers
 
