@@ -8,7 +8,10 @@ class Offer {
             try {
                 const res = await axios.get(url);
                 const { data } = res;
-                resolve(data.data);
+                let sorted = data.data;
+                // sorting array of objects by price
+                sorted = sorted.sort((a, b) => a.price > b.price ? 1 : -1);
+                resolve(sorted);
             } catch (err) {
                 reject(err);
             }
