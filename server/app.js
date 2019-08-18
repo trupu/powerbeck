@@ -15,7 +15,7 @@ const login = require('./routes/login');
 const offers = require('./routes/offers');
 const coaches = require('./routes/coaches');
 
-mongoose.connect(dbConfig, {
+const conn = mongoose.connect(dbConfig, {
     useNewUrlParser: true,
 });
 mongoose.Promise = global.Promise;

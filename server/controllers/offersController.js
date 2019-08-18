@@ -28,7 +28,7 @@ module.exports = {
 
         await offer.save();
 
-        return res.status(200).send({ data: offer, message: 'Offer was updated'})
+        return res.status(200).send({ data: offer, message: 'Offer was updated'});
     },
     
     async remove(req, res, next) {
