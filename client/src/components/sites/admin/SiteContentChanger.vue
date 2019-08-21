@@ -115,7 +115,7 @@ export default {
                     // eslint-disable-next-line
                     if (data[key][i] !== data[key]._id) {
                         const td = document.createElement('td');
-                        if (data[key][i] !== data[key]['img']) {
+                        if (data[key][i] !== data[key].img) {
                             td.innerHTML = data[key][i];
                         } else {
                             const img = document.createElement('img');
@@ -225,7 +225,7 @@ export default {
             } else {
                 this.single = false;
                 this.singleMessage = 'Uwaga operacja jest nieodwracalna!';
-            
+
                 setTimeout(() => {
                     const button = document.querySelector('.action-yes');
                     button.setAttribute('data-id', id);
@@ -285,7 +285,6 @@ export default {
             const inputs = document.querySelectorAll('.form-input');
             const inputsArray = Array.from(inputs);
 
-            
 
             const err = inputsArray.find(el => el.value === '');
 
@@ -314,6 +313,7 @@ export default {
                 if (!el.files) {
                     arrayValues[el.attributes.name.value] = el.value;
                 } else {
+                    // eslint-disable-next-line
                     arrayValues[el.attributes.name.value] = el.files[0];
                 }
             });
