@@ -9,10 +9,11 @@ module.exports = {
     },
     async create(req, res) {
         const coach = await new Coach({
-            img: req.body['img-name'],
+            img: req.file.filename,
             name: req.body.name,
             quotation: req.body.quotation,
             description: req.body.description,
+            about: req.body.about,
         }).save();
 
         const file = req.file;
@@ -38,10 +39,11 @@ module.exports = {
 
         if(error.status === '404') return res.status(404).send({message: error.message});
 
-        if(req.body['img-name']) coach.img = req.body['img-name'];
+        if(req.body['img-name']) coach.img = req.file.filename;
         if(req.body.name) coach.name = req.body.name;
         if(req.body.description) coach.description = req.body.description;
         if(req.body.quotation) coach.quotation = req.body.quotation;
+        if(req.body.about) coach.about = req.body.about;
 
         await coach.save();
 
@@ -52,10 +54,11 @@ module.exports = {
 
         if(!coach) return next();
 
-        if(req.body['img-name']) coach.img = req.body['img-name'];
+        if(req.body['img-name']) coach.img = req.file.filename;
         if(req.body.name) coach.name = req.body.name;
         if(req.body.description) coach.description = req.body.description;
         if(req.body.quotation) coach.quotation = req.body.quotation;
+        if(req.body.about) coach.about = req.body.about;
 
         await coach.save();
 
