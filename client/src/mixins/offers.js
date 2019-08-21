@@ -1,6 +1,7 @@
 import axios from 'axios';
+import address from '../config/address';
 
-const url = 'http://localhost:5000/adminpanel/offers';
+const url = `${address.main}/adminpanel/offers`;
 
 class Offer {
     static getData() {
@@ -10,6 +11,7 @@ class Offer {
                 const { data } = res;
                 let sorted = data.data;
                 // sorting array of objects by price
+                // eslint-disable-next-line
                 sorted = sorted.sort((a, b) => a.price > b.price ? 1 : -1);
                 resolve(sorted);
             } catch (err) {

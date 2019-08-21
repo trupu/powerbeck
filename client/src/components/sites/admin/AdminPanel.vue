@@ -1,7 +1,8 @@
 <template lang="pug">
     div.admin-container
         nav.nav-bar
-            <router-link to='/'>Strona Główna</router-link>
+            a(href='/')
+                | Strona Główna
             button.logout(@click='logout')
                 | Wyloguj
         div.grid-wrapper(v-if='adminWrapper')
@@ -95,6 +96,12 @@ export default {
     },
     created() {
         window.addEventListener('resize', this.buttonsClassNames);
+    },
+    mounted() {
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
     },
 };
 </script>

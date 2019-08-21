@@ -18,18 +18,19 @@
             div.alert
                 p.message
                     | Czy na pewno chcesz usunąć "{{ deleting }}"?
-                div.buttons
+                div.buttons(v-if='!single')
                     button.action-button.action-yes.button-medium(@click='action' data-action='yes')
                         | Tak
                     button.action-button.button-medium-reverse(@click='action' data-action='no')
                         | Nie
-                p.message-little
-                    | Uwaga operacja jest nieodwracalna!
+                p.message-little()
+                    | {{ singleMessage }}
                 div.anim-flexbox
                     div.anim(v-if='sending')
                                 div.circle
                                 div.circle
                                 div.circle
+                i(class='fas fa-times exit-button single-exit' v-if='single' @click='deleting = false')
         div.admin-form(v-if='formShowed')
             div.admin-form-wrapper
                 h3.form-title
@@ -37,9 +38,12 @@
                 div.form-content
                     label(v-for='(key, el) in returnedData[this.rowCounter]' v-if='el !== "_id"')
                         | {{ el }}:
-                        input(type='text' :name='el' :placeholder='key' class='form-input' autocomplete='off')
+                        input(type='text' :name='el' :placeholder='key' class='form-input' autocomplete='off' v-if='el !== "img"')
+                        div.file-flexbox(v-if='el === "img"')
+                            input.fileType.form-input(:name='el' type='file' accept='image/*' @change='fileNameChanger()')
+                            input#fileName.form-input(:name='el+"-name"' type='text' placeholder='Nazwa pliku' disabled)
                 div.send
-                    button.button-medium(@click='validateForm($parent.clickedContainer, formType)')
+                    button.button-medium(@click='validateForm($parent.clickedContainer, formType)' type='button')
                         | Wyślij
                 div.anim-flexbox
                     div.anim(v-if='sending')
@@ -53,28 +57,37 @@
 </template>
 <script>
 import offer from '../../../mixins/offers';
+import coach from '../../../mixins/coaches';
 
 export default {
     name: 'SiteContentChanger',
     data() {
         return {
+            fileText: '',
             buttonSize: 'button-small',
             buttonSizeReverse: 'button-small-reverse',
             buttonSizeSmaller: 'button-small',
             buttonSizeSmallerReverse: 'button-small-reverse',
             idHolder: '',
             rowCounter: 0,
+            // deleting form { beforeDelete() }
+            single: false,
+            singleMessage: 'Uwaga operacja jest nieodwracalna!',
             deleting: '',
+            // request handler
             colorHandler: '',
-            sending: false,
+            sending: false, // request animation
             formType: '',
             formTitle: '',
             statusMessage: '',
             returnedData: '',
+            // table handler
             created: false,
             newestTable: '',
             formShowed: false,
+            // methods
             offer,
+            coach,
         };
     },
     methods: {
@@ -102,7 +115,14 @@ export default {
                     // eslint-disable-next-line
                     if (data[key][i] !== data[key]._id) {
                         const td = document.createElement('td');
-                        td.innerHTML = data[key][i];
+                        if (data[key][i] !== data[key]['img']) {
+                            td.innerHTML = data[key][i];
+                        } else {
+                            const img = document.createElement('img');
+                            img.setAttribute('src', `img/${data[key][i]}`);
+                            img.setAttribute('alt', 'Zdjęcie Trenera');
+                            td.appendChild(img);
+                        }
                         tr.appendChild(td);
                     }
                 }
@@ -120,6 +140,7 @@ export default {
                 button2.setAttribute('data-id', data[key]._id);
                 button2.classList.add('tochangeR2');
                 button2.classList.add(this.buttonSizeSmallerReverse);
+                button2.classList.add('delete-button');
                 button2.setAttribute('data-parent-name', parent.attributes['data-name'].value);
                 button2.setAttribute('data-name', data[key].name);
                 button2.innerHTML = 'Usuń';
@@ -143,11 +164,13 @@ export default {
             }
             this.created = false;
             const data = await this[name].getData();
-            // eslint-disable-next-line
-            data.map(el => delete el['__v']);
-            this.createContent(data, this.$refs.getElement);
-            this.returnedData = data;
-            this.created = true;
+            if (data) {
+                // eslint-disable-next-line
+                data.map(el => delete el.__v);
+                this.createContent(data, this.$refs.getElement);
+                this.returnedData = data;
+                this.created = true;
+            }
         },
         // sending data to database
         async postData(name, data) {
@@ -162,6 +185,7 @@ export default {
             this.created = false;
             if (this.newestTable) this.newestTable.remove();
             await this.getData(this.$parent.clickedContainer);
+            window.stop();
             this.created = true;
             this.colorHandler = 'green';
             this.statusMessage = 'Wartość dodana pomyślnie!';
@@ -193,11 +217,21 @@ export default {
             const id = event.target.attributes['data-id'].value;
             const name = event.target.attributes['data-parent-name'].value;
             this.deleting = event.target.attributes['data-name'].value;
-            setTimeout(() => {
-                const button = document.querySelector('.action-yes');
-                button.setAttribute('data-id', id);
-                button.setAttribute('data-name', name);
-            }, 10);
+            const deleteButtons = document.querySelectorAll('.delete-button');
+
+            if (deleteButtons.length === 1) {
+                this.single = true;
+                this.singleMessage = 'Nie możesz usunąć tego wpisu, gdyż jest on wykorzystywany do generowania formularza! \n \n Dodaj kolejny wpis i wtedy usuń ten :)';
+            } else {
+                this.single = false;
+                this.singleMessage = 'Uwaga operacja jest nieodwracalna!';
+            
+                setTimeout(() => {
+                    const button = document.querySelector('.action-yes');
+                    button.setAttribute('data-id', id);
+                    button.setAttribute('data-name', name);
+                }, 10);
+            }
         },
         // deleting data
         async deleteData(id, name) {
@@ -233,6 +267,7 @@ export default {
             type === 'add' ? this.formTitle = 'Dodaj' : this.formTitle = 'Modyfikuj';
             // eslint-disable-next-line
             type ? this.formType = type : this.formType = 'modify';
+
             if (event.target.attributes['data-row']) this.rowCounter = event.target.attributes['data-row'].value;
             if (event.target.attributes['data-id']) this.idHolder = event.target.attributes['data-id'].value;
             this.formShowed = true;
@@ -249,6 +284,8 @@ export default {
             }
             const inputs = document.querySelectorAll('.form-input');
             const inputsArray = Array.from(inputs);
+
+            
 
             const err = inputsArray.find(el => el.value === '');
 
@@ -273,7 +310,13 @@ export default {
             this.errorMessage = '';
             const arrayValues = {};
             // eslint-disable-next-line
-            inputsArray.forEach(el => arrayValues[el.attributes.name.value] = el.value);
+            inputsArray.forEach(el => {
+                if (!el.files) {
+                    arrayValues[el.attributes.name.value] = el.value;
+                } else {
+                    arrayValues[el.attributes.name.value] = el.files[0];
+                }
+            });
 
             // eslint-disable-next-line
             method === 'add' ? this.postData(this.$parent.clickedContainer, arrayValues) : this.modifyData(this.$parent.clickedContainer, arrayValues, this.idHolder);
@@ -312,6 +355,13 @@ export default {
                 }
             }, 500);
         },
+        fileNameChanger() {
+            const tochange = document.querySelector('#fileName');
+            const ev = event.target;
+            // eslint-disable-next-line
+            let filename = ev.value.replace(/^.*[\\\/]/, '');
+            tochange.value = filename;
+        },
     },
     created() {
     },
@@ -319,6 +369,10 @@ export default {
         this.buttonSizeChanger();
         this.getData(this.$parent.clickedContainer);
         window.addEventListener('resize', this.buttonSizeChanger);
+        window.addEventListener('beforeunload', (e) => {
+            e.preventDefault();
+            e.returnValue = '';
+        });
     },
 };
 </script>
@@ -363,6 +417,7 @@ $default_site_color: #9E0012;
 
         align-items: center;
         justify-content: center;
+        position: relative;
 
         .message{
             font-size: 1.5em;
@@ -372,6 +427,8 @@ $default_site_color: #9E0012;
         .message-little{
             font-size: 1em;
             color: red;
+            text-align: center;
+            padding: 5px;
         }
         .buttons{
             display: flex;
@@ -435,16 +492,25 @@ table{
     td{
         padding: 5px;
         font-size: .6em;
+        text-align: center;
+        min-height: 50px;
 
         button{
             font-size: 1em;
             margin: 3px;
+        }
+        img{
+            max-width: 50px;
+            height: auto;
         }
     }
 
     .table-buttons-flex{
         display: flex;
         flex-flow: column;
+
+        align-items: center;
+        justify-content: center;
     }
 }
 
@@ -532,6 +598,46 @@ table{
 
                     &:focus{
                         border: none;
+                    }
+                }
+
+                .file-flexbox{
+                    display: flex;
+                    flex-flow: row;
+                    align-items: center;
+                    justify-content: flex-end;
+
+                    width: 100%;
+
+                    input{
+                        position: relative;
+                    }
+
+                    .fileType{
+                        visibility: hidden;
+                        position: relative;
+                        width: 50%;
+
+                        &::before{
+                            content:'Wyślij plik';
+                            color: $default_site_color;
+                            visibility: visible;
+                            position: absolute;
+                            right: 0;
+                            top: 0;
+                            padding: 5px;
+                            font-size: .8em;
+                            border: 1px solid $default_site_color;
+                            transition: all .3s ease-in-out;
+                            text-shadow: 1px 1px #000;
+                        }
+                        &:hover{
+                            cursor: pointer;
+                            &::before{
+                                color: #fff;
+                                background-color: $default_site_color;
+                            }
+                        }
                     }
                 }
             }

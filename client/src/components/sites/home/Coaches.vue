@@ -5,14 +5,14 @@
             p
                 | Trenerzy
         div.coaches-content(ref='coachesContent')
-        div.coaches-slider
-            div.coaches-slider_circle(ref='sliderCircle' v-for='n in this.array.CoachesArray.length' @click='slider(0, 5000)')
+        div.coaches-slider(v-if='coachesArray')
+            div.coaches-slider_circle(ref='sliderCircle' v-for='n in this.coachesArray.length' @click='slider(0, 5000)')
 
 
 </template>
 <script>
 import PageTitle from '../../pieces/PageTitle.vue';
-import CoachesArray from '../../../mixins/coaches';
+import Coach from '../../../mixins/coaches';
 
 export default {
   name: 'Coaches',
@@ -21,7 +21,7 @@ export default {
   },
   data() {
       return {
-          array: CoachesArray,
+          coachesArray: [],
           interval: '',
       };
   },
@@ -39,7 +39,7 @@ export default {
             main.appendChild(ci);
 
             const img = document.createElement('img');
-            img.src = array[index].url; // img
+            img.src = `img/${array[index].img}`; // img
             ci.appendChild(img);
 
             const ch = document.createElement('div');
@@ -99,7 +99,7 @@ export default {
     },
         // EVENT WRAPPER
     slider(index, time, pom = 0) {
-        if (event) {
+        if (event && event !== 'undefined') {
             const ev = event.target;
 
             let id = this.$refs.sliderCircle.indexOf(ev);
@@ -109,29 +109,33 @@ export default {
             const main = this.$refs.coachesContent;
             main.style = '';
 
-            this.slideEffect(this.array.CoachesArray, id);
-            (id === (this.array.CoachesArray.length - 1)) ? id = 0 : id++;  // eslint-disable-line
+            this.slideEffect(this.coachesArray, id);
+            (id === (this.coachesArray.length - 1)) ? id = 0 : id++;  // eslint-disable-line
 
             this.interval = setInterval(() => {
-                this.slideEffect(this.array.CoachesArray, id);
-                (id === (this.array.CoachesArray.length - 1)) ? id = 0 : id++;  // eslint-disable-line
+                this.slideEffect(this.coachesArray, id);
+                (id === (this.coachesArray.length - 1)) ? id = 0 : id++;  // eslint-disable-line
             }, time);
 
             return;
         }
-        this.slideEffect(this.array.CoachesArray, pom);
-        (pom === (this.array.CoachesArray.length - 1)) ? pom = 0 : pom++;   // eslint-disable-line
+        this.slideEffect(this.coachesArray, pom);
+        (pom === (this.coachesArray.length - 1)) ? pom = 0 : pom++;   // eslint-disable-line
 
         this.interval = setInterval(() => {
-            this.slideEffect(this.array.CoachesArray, pom);
-            (pom === (this.array.CoachesArray.length - 1)) ? pom = 0 : pom++;   // eslint-disable-line
+            this.slideEffect(this.coachesArray, pom);
+            (pom === (this.coachesArray.length - 1)) ? pom = 0 : pom++;   // eslint-disable-line
         }, time);
+    },
+    async loadCoaches() {
+        this.coachesArray = await Coach.getData();
     },
   },
   mounted() {
       this.slider(0, 5000);
   },
   created() {
+      this.loadCoaches();
   },
   destroyed() {
       clearInterval(this.interval);
