@@ -6,7 +6,8 @@
         div.content
             | Podana Przez ciebie strona nie została znaleziona
         div.router
-            <router-link to='/'>Strona Główna</router-link>
+            a(href='/')
+                | Strona Główna
 </template>
 <script>
 export default {
