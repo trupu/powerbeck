@@ -5,8 +5,15 @@
                     p
                         | Galeria
         div.photos-container_wrapper
-            div.photo(v-for='key in templatePhotos')
-                img(:src='key')
+            div.content-wrapper-img(v-for='key in galleryArray')
+                div.photo
+                    img(:src='"img/gallery/"+key.img')
+                p.photo-title
+                    | {{ key.title }}
+                p.photo-description
+                    | {{ key.description }}
+                p.photo-date
+                    | {{ key.date }}
         div.photos-container_content
             div.content_flex-wrapper
                 p.content
@@ -16,7 +23,7 @@
 </template>
 <script>
 import PageTitle from '../../pieces/PageTitle.vue';
-import galleryArray from '../../../mixins/gallery';
+import gallery from '../../../mixins/gallery';
 
 export default {
     name: 'Photos',
@@ -24,7 +31,20 @@ export default {
         PageTitle,
     },
     data() {
-        return galleryArray;
+        return {
+            galleryArray: [],
+        };
+    },
+    methods: {
+        async loadData() {
+            const tempGallery = await gallery.getData();
+            for (let i = 0; i < 3; i++) {
+                if(tempGallery[i]) this.galleryArray.push(tempGallery[i]);
+            }
+        },
+    },
+    created() {
+        this.loadData();
     },
 };
 </script>
@@ -33,8 +53,8 @@ export default {
     $default_site_color: #9E0012;
 
 .photos-container{
-    background-image: url('../../../assets/section6_bg.jpg');
-    background-size: 300%;
+    background-image: url('../../../assets/section6_bg.png');
+    background-size: 100%;
     background-repeat: no-repeat;
 
     color: #fff;
@@ -111,39 +131,60 @@ export default {
 @media (min-width: 768px){
     .photos-container{
         .photos-container_wrapper{
+
+            width: 100%;
             margin: 20px 0;
+            padding: 0 10px;
 
             display: grid;
-
             grid-template-columns: 1fr 1fr 1fr;
-            align-items: center;
-            justify-items: center;
-
-            .photo{
+            grid-gap: 0 10px;
+            .content-wrapper-img{
                 display: flex;
+                flex-flow: column;
                 align-items: center;
-                justify-content: center;
+                justify-content: space-between;
 
-                width: 80%;
-                height: auto;
-                object-fit: cover;
+                width: 100%;
+                min-height: 300px;
+                position: relative;
 
-                overflow: hidden;
+                background-color: rgba(0,0,0,.5);
+                box-shadow: 0 0 5px 2px #000;
+                margin: 0 5px;
 
-               box-shadow: 0 0 15px #000;
-
-                img{
+                .photo{
                     width: 100%;
-                    height: auto;
-                    max-height: 200px;
+                    height: 200px;
 
-                    transition: all .3s ease-in-out;
+                    overflow: hidden;
+
+                    img{
+                        width: 100%;
+                        height: auto;
+                        max-height: 200px;
+
+                        transition: all .3s ease-in-out;
+                    }
+
+                    &:hover{
+                        img{
+                            transform: scale(1.1) rotate(3deg);
+                        }
+                    }
+                   
                 }
 
-                &:hover{
-                    img{
-                        transform: scale(1.2) rotate(5deg);
-                    }
+                .photo-title{
+                    font-size: 1em;
+                }
+
+                .photo-description{
+                    font-size: .8em;
+                }
+                
+                .photo-date{
+                    font-size: .6em;
                 }
             }
         }
