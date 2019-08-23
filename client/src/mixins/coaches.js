@@ -2,7 +2,8 @@ import axios from 'axios';
 import address from '../config/address';
 
 const url = `${address.main}/adminpanel/coaches`;
-const imageUrl = `${address.img}`;
+
+/* eslint-disable */
 
 class Coach {
     static getData() {
@@ -70,17 +71,6 @@ class Coach {
         return new Promise(async (resolve, reject) => {
             try {
                 const res = await axios.delete(`${url}/${id}`);
-                resolve(res);
-            } catch (err) {
-                reject(err);
-            }
-        });
-    }
-
-    static postFile(img) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const res = await axios.post(imageUrl, img);
                 resolve(res);
             } catch (err) {
                 reject(err);

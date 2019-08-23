@@ -36,7 +36,7 @@
                 h3.form-title
                     | {{this.formTitle}} {{this.$parent.divs[this.$parent.clickedContainer].formTitle}}
                 div.form-content
-                    label(v-for='(key, el) in returnedData[this.rowCounter]' v-if='el !== "_id"')
+                    label(v-for='(key, el) in returnedData[this.rowCounter]' v-if='el !== "_id" && el !== "date"')
                         | {{ el }}:
                         input(type='text' :name='el' :placeholder='key' class='form-input' autocomplete='off' v-if='el !== "img"')
                         div.file-flexbox(v-if='el === "img"')
@@ -58,6 +58,7 @@
 <script>
 import offer from '../../../mixins/offers';
 import coach from '../../../mixins/coaches';
+import gallery from '../../../mixins/gallery';
 
 export default {
     name: 'SiteContentChanger',
@@ -88,6 +89,7 @@ export default {
             // methods
             offer,
             coach,
+            gallery,
         };
     },
     methods: {
@@ -119,7 +121,11 @@ export default {
                             td.innerHTML = data[key][i];
                         } else {
                             const img = document.createElement('img');
-                            img.setAttribute('src', `img/${data[key][i]}`);
+                            if (parent.attributes['data-name'].value === 'gallery') {
+                                img.setAttribute('src', `img/gallery/${data[key][i]}`);
+                            } else {
+                                img.setAttribute('src', `img/${data[key][i]}`);
+                            }
                             img.setAttribute('alt', 'Zdjęcie Trenera');
                             td.appendChild(img);
                         }
@@ -289,9 +295,11 @@ export default {
             const err = inputsArray.find(el => el.value === '');
 
             if (err && method === 'add') {
-                this.colorHandler = 'red';
-                this.statusMessage = 'Proszę wypełnić wszystkie pola!';
-                return;
+                if (err.name !== 'date') {
+                    this.colorHandler = 'red';
+                    this.statusMessage = 'Proszę wypełnić wszystkie pola!';
+                    return;
+                }
             }
             let counter = 0;
             inputsArray.forEach((el) => {
@@ -369,10 +377,12 @@ export default {
         this.buttonSizeChanger();
         this.getData(this.$parent.clickedContainer);
         window.addEventListener('resize', this.buttonSizeChanger);
+        /*
         window.addEventListener('beforeunload', (e) => {
             e.preventDefault();
             e.returnValue = '';
         });
+        */
     },
 };
 </script>

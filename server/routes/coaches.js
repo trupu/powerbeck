@@ -5,8 +5,6 @@ const errors = require('../middlewares/errors');
 // file upload
 const upload = require('../config/multer-conf.js');
 
-// const upload = require('../config/multer-conf');
-
 const coaches = express.Router();
 
 // GET
