@@ -18,7 +18,7 @@
             div.content_flex-wrapper
                 p.content
                     | Przejdź do galerii
-                a(href='/photos').anim
+                a(@click='goToGallery()').anim
                     i(class='fas fa-arrow-right')
 </template>
 <script>
@@ -39,8 +39,11 @@ export default {
         async loadData() {
             const tempGallery = await gallery.getData();
             for (let i = 0; i < 3; i++) {
-                if(tempGallery[i]) this.galleryArray.push(tempGallery[i]);
+                if (tempGallery[i]) this.galleryArray.push(tempGallery[i]);
             }
+        },
+        goToGallery() {
+            this.$router.push('/gallery');
         },
     },
     created() {
@@ -172,7 +175,6 @@ export default {
                             transform: scale(1.1) rotate(3deg);
                         }
                     }
-                   
                 }
 
                 .photo-title{
@@ -182,7 +184,6 @@ export default {
                 .photo-description{
                     font-size: .8em;
                 }
-                
                 .photo-date{
                     font-size: .6em;
                 }
