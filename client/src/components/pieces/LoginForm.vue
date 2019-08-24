@@ -65,7 +65,11 @@ export default {
     },
     methods: {
         showLoginForm() {
-            this.isLoginForm = true;
+            if (this.$session.exists()) {
+                this.$router.push('/adminpanel');
+            } else {
+                this.isLoginForm = true;
+            }
         },
         showContactForm() {
             this.isContactForm = true;
@@ -97,7 +101,7 @@ export default {
                     /* eslint-disable-next-line */
                     const login = val.find((el) => el.login === this.loginFormLogin );
                     if (login && login.password === this.loginFormPassword) { // Succesful login
-                        this.isLogged = true;
+                        this.$session.start();
                         this.$router.push('/adminpanel');
                     } else {
                         this.loginStatus = 'Niepoprawne dane logowania!';

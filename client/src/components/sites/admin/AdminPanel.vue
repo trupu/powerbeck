@@ -3,7 +3,7 @@
         nav.nav-bar
             a(href='/')
                 | Strona Główna
-            button.logout(@click='logout')
+            a.logout(href='/' @click='logout')
                 | Wyloguj
         div.grid-wrapper(v-if='adminWrapper')
             div.admin-content(v-for='value in divs' @click='checkClicked(), buttonsClassNames()' :data-url='value.name')
@@ -53,10 +53,13 @@ export default {
     methods: {
         logout() {
             // eslint-disable-next-line
-            console.log('Wylogowano!');
+            this.$session.destroy();
         },
+        // checking if admin is logged in
         checkIsLogged() {
-            // checking if admin is logged in
+          if (!this.$session.exists()) {
+              this.$router.push('/404');
+          }
         },
         // checking which of divs was clicked
         checkClicked() {
@@ -95,6 +98,7 @@ export default {
         },
     },
     created() {
+        this.checkIsLogged();
         window.addEventListener('resize', this.buttonsClassNames);
     },
     mounted() {
@@ -141,6 +145,7 @@ $default_site_color: #9E0012;
                 background: none;
                 border: none;
                 padding: 10px;
+                margin: 0 5px;
                 height: 40px;
                 min-width: 120px;
                 color: #fff;
