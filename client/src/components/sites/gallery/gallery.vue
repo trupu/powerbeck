@@ -21,14 +21,14 @@
 </template>
 <script>
 import gal from '../../../mixins/gallery';
-import Footer from '../home/Footer';
+import Footer from '../home/Footer.vue';
 
 export default {
     name: 'gallery',
     components: {
         Footer,
     },
-    data () {
+    data() {
         return {
             galleryArray: [],
             loading: true,
@@ -40,7 +40,7 @@ export default {
             this.loading = false;
         },
     },
-    mounted () {
+    mounted() {
         this.loadData();
     },
 };
@@ -144,7 +144,6 @@ export default {
                     }
                 }
             }
-            
             .photo-wrapper{
                 display: flex;
                 flex-flow: column;
@@ -165,6 +164,7 @@ export default {
 
                     img{
                         width: 100%;
+                        min-height: 200px;
                         height: auto;
                         transition: all .3s ease-in-out;
 

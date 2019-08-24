@@ -69,7 +69,7 @@ export default {
         .offer-container{
             align-items: center;
             justify-items: center;
-            background-size: 400%;
+            background-size: 420%;
         }
     }
 
@@ -82,7 +82,7 @@ export default {
 
     @media (min-width: 1024px){
         .offer-container{
-            background-size: 120%;
+            background-size: 150%;
             background-position: 50% 0;
         }
     }

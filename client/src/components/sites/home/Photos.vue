@@ -38,7 +38,7 @@ export default {
     methods: {
         async loadData() {
             const tempGallery = await gallery.getData();
-            for (let i = 0; i < 3; i++) {
+            for (let i = tempGallery.length; i >= tempGallery.length - 3; i--) {
                 if (tempGallery[i]) this.galleryArray.push(tempGallery[i]);
             }
         },
@@ -57,7 +57,7 @@ export default {
 
 .photos-container{
     background-image: url('../../../assets/section6_bg.png');
-    background-size: 100%;
+    background-size: 150%;
     background-repeat: no-repeat;
 
     color: #fff;
@@ -128,6 +128,12 @@ export default {
                 }
             }
         }
+    }
+}
+
+@media (min-width: 480px) {
+    .photos-container{
+        background-size: 100%;
     }
 }
 
