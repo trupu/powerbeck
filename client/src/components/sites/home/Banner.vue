@@ -34,8 +34,7 @@
                     a(href='#photos')
                         li
                             | galeria
-
-
+        div.img-holder(v-for='key in imgHolder')
         section.banner-main
             div.banner-main_wrapper
                 span.banner-main_title
@@ -48,7 +47,7 @@
                 button.button-medium-reverse(@click='$refs.LF.showLoginForm()')
                     | LOGOWANIE
             a(href='#coaches')
-                i(class='fas fa-chevron-down')
+                i.banner-main_link(class='fas fa-chevron-down')
         <LoginForm ref='LF'/>
 </template>
 <script>
@@ -63,7 +62,14 @@ export default {
   },
   data() {
       return {
+          interval: '',
           bannerTimeout: false,
+          imgHolder: [
+              'img/gym1.jpg',
+              'img/gym2.jpg',
+              'img/gym3.jpg',
+          ],
+          actualImg: '',
       };
   },
   methods: {
@@ -151,6 +157,43 @@ export default {
             menu.style.backgroundColor = '';
         }
     },
+    bannerSetImg() {
+        const img = document.querySelectorAll('.img-holder');
+        const section = [];
+        section.push(document.querySelector('.banner-main_wrapper'));
+        section.push(document.querySelector('.banner-main_buttons'));
+        section.push(document.querySelector('.banner-main_link'));
+        // eslint-disable-next-line
+        img.forEach((el, index) => el.style.backgroundImage = `url(${this.imgHolder[index]})`);
+        let current = 0;
+        img[current].style.opacity = 1;
+        // eslint-disable-next-line
+        section.forEach(el => el.style.transform = 'translateY(0)');
+        current++;
+        this.interval = setInterval(() => {
+            this.bannerChangeImg(img, current, section);
+            // eslint-disable-next-line
+            (current === this.imgHolder.length - 1) ? current = 0 : current++;
+        }, 5000);
+    },
+    bannerChangeImg(img, current, section) {
+        img[current].style.opacity = 1;
+        section.forEach((el) => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(50px)';
+        });
+        setTimeout(() => {
+            section.forEach((el) => {
+                el.style.opacity = 1;
+                el.style.transform = 'translateY(0)';
+            });
+            if (img[current - 1]) {
+                img[current - 1].style.opacity = 0;
+            } else {
+                img[this.imgHolder.length - 1].style.opacity = 0;
+            }
+        }, 500);
+    },
   },
   created() {
     window.addEventListener('scroll', this.scrollMenu);
@@ -158,8 +201,10 @@ export default {
   destroyed() {
     window.removeEventListener('scroll', this.scrollMenu);
     this.bannerTimeout = false;
+    clearInterval(this.interval);
   },
   mounted() {
+      this.bannerSetImg();
   },
 };
 </script>
@@ -200,10 +245,26 @@ export default {
         width:100vw;
         height: 100vh;
 
-        background-image: url('../../../assets/banner_bg.jpg');
+        background-color: #262626;
         background-size: 450%;
         background-repeat: no-repeat;
         background-position: 60% 50%;
+        position: relative;
+
+        .img-holder{
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            z-index: 5;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            opacity: 0;
+            transition: all .5s ease-in-out;
+        }
 
     }
 
@@ -408,6 +469,8 @@ export default {
 
         flex-flow: column;
 
+        z-index: 50;
+
         width: 100%;
         height: 100%;
 
@@ -416,15 +479,18 @@ export default {
 
         .banner-main_wrapper{
             display: flex;
-
             flex-flow: column;
 
+            z-index: 50;
             color: #fff;
             font-weight: 700;
             text-align: center;
             text-transform: uppercase;
             user-select: none;
             text-shadow: 2px 2px 8px #000;
+
+            transition: opacity .3s ease-in-out, transform .3s ease-in-out;
+            transform: translateY(50px);
 
             .banner-main_title{
                 font-size: 3em;
@@ -438,19 +504,24 @@ export default {
         .banner-main_buttons{
             display: flex;
 
+            z-index: 50;
             flex-flow: column;
             align-items: center;
+
+            transition: opacity .3s ease-in-out, transform .3s ease-in-out;
+            transform: translateY(50px);
 
             button:first-child{
                 margin: 30px 0 20px 0;
             }
         }
-        i{
+            i{
                 font-size: 2.5em;
                 color: #fff;
 
                 width: 120px;
 
+                z-index: 50;
                 text-align: center;
 
                 position: relative;
