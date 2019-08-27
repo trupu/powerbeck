@@ -150,6 +150,7 @@ export default {
                 justify-content: flex-start;
             }
             .offer-wrapper_content{
+                padding: 0 10px;
                 transition: all .3s ease-in-out;
             }
             .offer-list-active{

@@ -4,23 +4,29 @@ div
         div.login-form-wrapper
             div.form-title
                 | Panel Administracyjny
-            form(action='/login' method='POST')
+            div.form
                 label
                     i(class='fas fa-user')
-                    input(type='text' name='login' placeholder='Login' v-model='loginFormLogin' required)
+                    input(type='text' name='login' placeholder='Login' v-model='loginFormLogin' autocomplete='off' required)
                     <br />
                 label
                     i(class='fas fa-lock')
-                    input(type='password' name='password' placeholder='Hasło' required)
+                    input(type='password' name='password' placeholder='Hasło' v-model='loginFormPassword' autocomplete='off' required)
                     <br />
-                button
+                button(@click='checkLoginData()' :disabled='loginLoading')
                     | Zaloguj
+                div.loading-anim(v-if='loginLoading')
+                    div.circle
+                    div.circle
+                    div.circle
+                p.login-error(v-if='loginStatus')
+                    | {{ loginStatus }}
                 i(class='fas fa-times exit-button' @click='hideLoginForm()')
     div.login-form-container(v-if='this.isContactForm')
         div.contact-form-wrapper
             div.form-title
                 | Kontakt
-            form(action='/contact' method='POST')
+            form(action='/contact' method='POST' autocomplete='off')
                 label
                     i(class='fas fa-user')
                     input(type='text' name='login' placeholder='imię' v-model='contactFormName' required)
@@ -38,21 +44,32 @@ div
                 i(class='fas fa-times exit-button' @click='hideContactForm()')
 </template>
 <script>
+import loginMethods from '../methods/loginMethod';
+
 export default {
     name: 'LoginForm',
     data() {
         return {
+            lm: loginMethods,
             isLoginForm: false,
             isContactForm: false,
             contactFormName: '',
             contactFormEmail: '',
             contactFormMessage: '',
-            loginFormLogin: '',
+            // Temporary - production
+            loginFormLogin: 'powerbeckadmin',
+            loginFormPassword: 'powerbeckadmin',
+            loginStatus: '',
+            loginLoading: false,
         };
     },
     methods: {
         showLoginForm() {
-            this.isLoginForm = true;
+            if (this.$session.exists()) {
+                this.$router.push('/adminpanel');
+            } else {
+                this.isLoginForm = true;
+            }
         },
         showContactForm() {
             this.isContactForm = true;
@@ -63,12 +80,60 @@ export default {
         hideContactForm() {
             this.isContactForm = false;
         },
+        // basic validation
+        validateForm() {
+            if (this.loginFormLogin === '' || this.loginFormPassword === '') {
+                return false;
+            }
+            return true;
+        },
+        // checking login data
+        checkLoginData() {
+            if (!this.validateForm()) {
+                this.loginStatus = 'Wypełnij wszystkie pola!';
+                return;
+            }
+            this.loginStatus = '';
+            this.loginLoading = true;
+            const data = this.lm.LoginService.getData();
+            if (data) {
+                data.then((val) => {
+                    /* eslint-disable-next-line */
+                    const login = val.find((el) => el.login === this.loginFormLogin );
+                    if (login && login.password === this.loginFormPassword) { // Succesful login
+                        this.$session.start();
+                        this.$router.push('/adminpanel');
+                    } else {
+                        this.loginStatus = 'Niepoprawne dane logowania!';
+                    }
+                    this.loginLoading = false;
+                });
+            } else {
+                this.loginLoading = false;
+                this.loginStatus = 'Błąd połączenia z serwerem!';
+            }
+        },
     },
 };
 </script>
 <style lang="scss">
 
 $default_site_color: #9e0012;
+
+@keyframes loading-button{
+    0%{
+        transform: translateY(0);
+    }
+    50%{
+        transform: translateY(-10px);
+    }
+    80%{
+        transform: translateY(0);
+    }
+    100%{
+
+    }
+}
 
 .login-form-container{
     display: flex;
@@ -120,7 +185,7 @@ $default_site_color: #9e0012;
             margin-bottom: 20px;
         }
 
-        form{
+        .form, form{
             label{
                 position: relative;
 
@@ -174,6 +239,11 @@ $default_site_color: #9e0012;
                 width: 200px;
                 height: 40px;
 
+                display: flex;
+                flex-flow: row;
+                align-items: center;
+                justify-content: center;
+
                 background: none;
                 border: 1px solid $default_site_color;
                 color: #fff;
@@ -186,9 +256,51 @@ $default_site_color: #9e0012;
                     cursor: pointer;
                     background-color: $default_site_color;
                 }
+
+                .loading-main{
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    border: 2px solid $default_site_color;
+
+                    margin: 0 10px;
+                }
             }
             .contact-form-button{
                 float: right;
+            }
+
+            .loading-anim{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                width: 100%;
+
+                position: absolute;
+                left: 0;
+                bottom: 10%;
+
+                .circle{
+                    height: 10px;
+                    width: 10px;
+                    border-radius: 50%;
+                    background-color: $default_site_color;
+                    margin: 40px 5px 0 5px;
+
+                    animation: loading-button 1s infinite both ease-in-out;
+                }
+                @for $i from 1 to 4{
+                    .circle:nth-child(#{$i}){
+                        animation-delay: 0s + ($i*5/100);
+                    }
+                }
+            }
+
+            .login-error{
+                color: $default_site_color;
+                font-size: .8em;
+                text-align: center;
             }
         }
 
@@ -211,7 +323,7 @@ $default_site_color: #9e0012;
 
 @media (max-width: 768px){
     .login-form-container{
-        .login-form-wrapper{
+        .login-form-wrapper, .contact-form-wrapper{
             width: 60%;
         }
     }
@@ -219,7 +331,7 @@ $default_site_color: #9e0012;
 
 @media (max-width: 480px){
     .login-form-container{
-        .login-form-wrapper{
+        .login-form-wrapper, .contact-form-wrapper{
             width: 100%;
 
             .exit-button{
