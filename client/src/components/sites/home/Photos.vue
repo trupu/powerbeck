@@ -171,7 +171,7 @@ export default {
                     img{
                         width: 100%;
                         height: auto;
-                        max-height: 200px;
+                        min-height: 200px;
 
                         transition: all .3s ease-in-out;
                     }
