@@ -44,6 +44,7 @@ div
                 i(class='fas fa-times exit-button' @click='hideContactForm()')
 </template>
 <script>
+import hash from 'crypto-js/sha256';
 import loginMethods from '../methods/loginMethod';
 
 export default {
@@ -93,6 +94,7 @@ export default {
                 this.loginStatus = 'Wypełnij wszystkie pola!';
                 return;
             }
+            const tempPass = hash(this.loginFormPassword).toString();
             this.loginStatus = '';
             this.loginLoading = true;
             const data = this.lm.LoginService.getData();
@@ -100,7 +102,7 @@ export default {
                 data.then((val) => {
                     /* eslint-disable-next-line */
                     const login = val.find((el) => el.login === this.loginFormLogin );
-                    if (login && login.password === this.loginFormPassword) { // Succesful login
+                    if (login && login.password === tempPass) { // Succesful login
                         this.$session.start();
                         this.$router.push('/adminpanel');
                     } else {
