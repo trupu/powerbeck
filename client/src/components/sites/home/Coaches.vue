@@ -13,6 +13,7 @@
 <script>
 import PageTitle from '../../pieces/PageTitle.vue';
 import Coach from '../../../mixins/coaches';
+import address from '../../../config/address';
 
 export default {
   name: 'Coaches',
@@ -23,6 +24,7 @@ export default {
       return {
           coachesArray: [],
           interval: '',
+          address,
       };
   },
   methods: {
@@ -39,7 +41,7 @@ export default {
             main.appendChild(ci);
 
             const img = document.createElement('img');
-            img.src = `img/${array[index].img}`; // img
+            img.src = `${address.img}/${array[index].img}`; // img
             ci.appendChild(img);
 
             const ch = document.createElement('div');

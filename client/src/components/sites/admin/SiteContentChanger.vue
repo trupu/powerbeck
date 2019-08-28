@@ -59,6 +59,7 @@
 import offer from '../../../mixins/offers';
 import coach from '../../../mixins/coaches';
 import gallery from '../../../mixins/gallery';
+import address from '../../../config/address';
 
 export default {
     name: 'SiteContentChanger',
@@ -90,6 +91,7 @@ export default {
             offer,
             coach,
             gallery,
+            address,
         };
     },
     methods: {
@@ -122,9 +124,9 @@ export default {
                         } else {
                             const img = document.createElement('img');
                             if (parent.attributes['data-name'].value === 'gallery') {
-                                img.setAttribute('src', `img/gallery/${data[key][i]}`);
+                                img.setAttribute('src', `${address.img}/gallery/${data[key][i]}`);
                             } else {
-                                img.setAttribute('src', `img/${data[key][i]}`);
+                                img.setAttribute('src', `${address.img}/${data[key][i]}`);
                             }
                             img.setAttribute('alt', 'Zdjęcie Trenera');
                             td.appendChild(img);
@@ -148,7 +150,11 @@ export default {
                 button2.classList.add(this.buttonSizeSmallerReverse);
                 button2.classList.add('delete-button');
                 button2.setAttribute('data-parent-name', parent.attributes['data-name'].value);
-                button2.setAttribute('data-name', data[key].name);
+                if (data[key].name) {
+                    button2.setAttribute('data-name', data[key].name);
+                } else {
+                    button2.setAttribute('data-name', data[key].title);
+                }
                 button2.innerHTML = 'Usuń';
                 button2.addEventListener('click', this.firstlyDelete);
 

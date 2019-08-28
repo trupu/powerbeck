@@ -1,6 +1,7 @@
 import axios from 'axios';
+import address from '../../config/address';
 
-const url = 'http://localhost:5000/login';
+const url = `${address.main}/login`;
 
 class LoginService {
     static getData() {
