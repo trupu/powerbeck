@@ -1,4 +1,4 @@
 module.exports = {
-    relative: './client/public/img',
-    absolute: '/client/public/img',
+    relative: './server/public/img',
+    absolute: '/server/public/img',
 }
