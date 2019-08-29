@@ -1,23 +1,21 @@
 # POWERBECK GYM&FITNESS
 
-### how to start - server
+### THIS BRANCH IS ONLY USED TO SERVE SITE ON NETLIFY
 
-npm run dev
+Link: powerbeck.netlify.com
 
-### how to start - client 
+## THE SITE WORKS FINE ON GOOGLE CHROME 
 
-cd client && npm run serve 
+## DOESNT WORK ON MOZILLA BECAUSE OF CORS POLICY
 
-### Installing dependencies
+CORS does not allow to combine http and https requests :/ The Public SSL
+Certificate is necessary. Unfortunatelly currently I dont have enough money
+to buy domain for my backend and set the SSL Certificate.
 
-npm install
+# To checkout project just clone branch master then simply follow the instructions showed in README file ;)
 
-### Project To-do list:
+1. Install Dependencies
+2. Serve project on your local machine
+3. Go to the http://localhost:8080/
 
-1. Finish CRUD for adminpanel // done
-2. Create database collection for gallery and coaches // done
-3. Connect methods from adminpanel with content generated on website // done
-4. Turn on security methods for adminpanel (they`re turned off to avoid wasting time) // done
-5. Change gallery`s desgin (it looks awful now ;d) // done
-6. Create database collection for passes so Gym owner could easly modify and check passes (currently he`s using notebook)
-7. CRUD + design for passes in adminpanel 
+I hope you will enjoy! :)
