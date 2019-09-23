@@ -11,7 +11,7 @@ Visit branch -> client to check the newest Frontend API version.
 ### Preview
 ```
 
-Link: [Preview](http://188.68.232.79:8080)
+Link: http://188.68.232.79:8080
 ```
 
 ## Project setup
