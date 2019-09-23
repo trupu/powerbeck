@@ -10,7 +10,7 @@
                 div.anim
             div.photo-wrapper(v-if='!loading' v-for='key in galleryArray')
                 div.photo
-                    img(:src='"img/gallery/"+key.img')
+                    img(:src='imgUrl+"/gallery/"+key.img')
                 div.photo-title
                     | {{ key.title }}
                 div.photo-description
@@ -22,6 +22,7 @@
 <script>
 import gal from '../../../mixins/gallery';
 import Footer from '../home/Footer.vue';
+import address from '../../../config/address';
 
 export default {
     name: 'gallery',
@@ -32,6 +33,7 @@ export default {
         return {
             galleryArray: [],
             loading: true,
+            imgUrl: address.img,
         };
     },
     methods: {

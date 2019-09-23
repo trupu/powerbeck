@@ -59,6 +59,7 @@
 import offer from '../../../mixins/offers';
 import coach from '../../../mixins/coaches';
 import gallery from '../../../mixins/gallery';
+import address from '../../../config/address';
 
 export default {
     name: 'SiteContentChanger',
@@ -122,9 +123,9 @@ export default {
                         } else {
                             const img = document.createElement('img');
                             if (parent.attributes['data-name'].value === 'gallery') {
-                                img.setAttribute('src', `img/gallery/${data[key][i]}`);
+                                img.setAttribute('src', `${address.img}/gallery/${data[key][i]}`);
                             } else {
-                                img.setAttribute('src', `img/${data[key][i]}`);
+                                img.setAttribute('src', `${address.img}/${data[key][i]}`);
                             }
                             img.setAttribute('alt', 'Zdjęcie Trenera');
                             td.appendChild(img);
@@ -512,6 +513,7 @@ table{
         img{
             max-width: 50px;
             height: auto;
+            object-fit: cover;
         }
     }
 

@@ -13,6 +13,7 @@
 <script>
 import PageTitle from '../../pieces/PageTitle.vue';
 import Coach from '../../../mixins/coaches';
+import address from '../../../config/address';
 
 export default {
   name: 'Coaches',
@@ -39,7 +40,7 @@ export default {
             main.appendChild(ci);
 
             const img = document.createElement('img');
-            img.src = `img/${array[index].img}`; // img
+            img.src = `${address.img}/${array[index].img}`; // img
             ci.appendChild(img);
 
             const ch = document.createElement('div');
@@ -172,7 +173,7 @@ export default {
         img{
             width: 100px;
             height: 100px;
-
+            object-fit: cover;
             border-radius: 50%;
         }
     }
@@ -297,7 +298,7 @@ export default {
             grid-area: 1 / 1 / 1 / span 2;
             img{
                 width: 150px;
-                height: auto;
+                height: 150px;
             }
         }
         .coach-header{
@@ -322,6 +323,7 @@ export default {
         .coach-image{
             img{
                 width: 200px;
+                height: 200px;
             }
         }
     }

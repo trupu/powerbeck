@@ -7,7 +7,7 @@
         div.photos-container_wrapper
             div.content-wrapper-img(v-for='key in galleryArray')
                 div.photo
-                    img(:src='"img/gallery/"+key.img')
+                    img(:src='imgUrl+"/gallery/"+key.img')
                 p.photo-title
                     | {{ key.title }}
                 p.photo-description
@@ -24,6 +24,7 @@
 <script>
 import PageTitle from '../../pieces/PageTitle.vue';
 import gallery from '../../../mixins/gallery';
+import address from '../../../config/address';
 
 export default {
     name: 'Photos',
@@ -33,6 +34,7 @@ export default {
     data() {
         return {
             galleryArray: [],
+            imgUrl: address.img,
         };
     },
     methods: {

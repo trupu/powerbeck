@@ -231,6 +231,7 @@ $default_site_color: #9E0012;
         img{
             height: auto;
             width: 100%;
+            object-fit: cover;
         }
     }
 }
