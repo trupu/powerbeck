@@ -19,7 +19,8 @@ Node - JS Serverside Engine allowing to setup and work with backend API
 ```
 The project was my first contact with Vue.js. I learned a lot of Vue`s methodology,
 how to connect front & backend endpoints, how to work with axios / ES8 Promises,
-how to take care of code clarity, logically organize folders and project data. Furthermore, I`ve been working with git repository and webpack.
+how to take care of code clarity, logically organize folders and project data.
+Furthermore, I`ve been working with git repository and webpack.
 The project is finished in about 95%. There is lack of contact form, since i had an idea to replace it with passes menu. Perhaps I`ll comeback to this project in the future and finish it completely.
 One may have noticed the fact that Powerbeck works on external IP instead of domain. Yeah, someday i`ll buy a domain and configure SSL Certificates for my backend API :D
 ```
